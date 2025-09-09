@@ -1,0 +1,2653 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Campuscart - College Food Directory</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'campus-red': '#f97316',
+                        'campus-green': '#16a34a',
+                        'campus-light-green': '#22c55e'
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .food-card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .food-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+        .shop-button {
+            transition: all 0.3s ease;
+        }
+        .shop-button:hover {
+            transform: scale(1.05);
+        }
+        .menu-item {
+            transition: all 0.3s ease;
+        }
+        .menu-item:hover {
+            transform: translateX(5px);
+            background-color: #f9fafb;
+        }
+    </style>
+</head>
+<body class="bg-white min-h-screen">
+    <!-- Navigation Header -->
+    <nav class="bg-campus-red text-white p-4 shadow-lg">
+        <div class="container mx-auto flex justify-between items-center">
+            <h1 class="text-2xl md:text-3xl font-bold cursor-pointer" onclick="showHomePage()">🍽️ Campuscart</h1>
+            <p class="text-sm md:text-base">College Food Directory</p>
+        </div>
+    </nav>
+
+    <!-- Home Page -->
+    <div id="homePage" class="container mx-auto px-4 py-8">
+        <div class="text-center mb-12">
+            <h2 class="text-3xl md:text-4xl font-bold text-campus-red mb-4">Welcome to Campuscart</h2>
+            <p class="text-gray-600 text-lg max-w-2xl mx-auto">Discover delicious food options across our Sri Krishna Arts and Science college. Click any shops Taste it and Enjoy the Taste 😋</p>
+        </div>
+
+        <!-- Search Bar -->
+        <div class="max-w-2xl mx-auto mb-12">
+            <div class="relative">
+                <input 
+                    type="text" 
+                    id="searchInput" 
+                    placeholder="Search and Taste" 
+                    class="w-full px-6 py-4 text-lg border-2 border-campus-red rounded-full focus:outline-none focus:border-campus-green transition-colors shadow-lg"
+                    oninput="searchItems()"
+                >
+                <div class="absolute right-4 top-1/2 transform -translate-y-1/2">
+                    <svg class="w-6 h-6 text-campus-red" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                    </svg>
+                </div>
+            </div>
+            
+            <!-- Search Results -->
+            <div id="searchResults" class="hidden mt-4 bg-white rounded-lg shadow-lg border-2 border-gray-100 max-h-96 overflow-y-auto">
+                <!-- Results will be populated here -->
+            </div>
+        </div>
+
+        <!-- Featured Cafeteria Button -->
+        <div class="mb-8 flex justify-center">
+            <button onclick="showShopPage('renu')" class="shop-button bg-campus-green hover:bg-green-600 text-white p-8 rounded-xl shadow-lg w-full max-w-md">
+                <div class="text-4xl mb-3">🍛</div>
+                <h3 class="text-2xl font-bold">Renu's Cafeteria</h3>
+                <p class="text-base mt-3 opacity-90">Traditional Indian Meals - Featured Restaurant</p>
+            </button>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-6xl mx-auto">
+            <button onclick="showShopPage('chewz')" class="shop-button bg-campus-green hover:bg-green-600 text-white p-6 rounded-xl shadow-lg">
+                <div class="text-2xl mb-2">🍕</div>
+                <h3 class="text-xl font-bold">Chewz</h3>
+                <p class="text-sm mt-2 opacity-90">Fast Food & Snacks</p>
+            </button>
+
+            <button onclick="showShopPage('foodjack')" class="shop-button bg-campus-red hover:bg-orange-600 text-white p-6 rounded-xl shadow-lg">
+                <div class="text-2xl mb-2">🍔</div>
+                <h3 class="text-xl font-bold">Food Jack</h3>
+                <p class="text-sm mt-2 opacity-90">Burgers & Wraps</p>
+            </button>
+
+            <button onclick="showShopPage('smiley')" class="shop-button bg-campus-red hover:bg-orange-600 text-white p-6 rounded-xl shadow-lg">
+                <div class="text-2xl mb-2">😊</div>
+                <h3 class="text-xl font-bold">Smiley Cafe</h3>
+                <p class="text-sm mt-2 opacity-90">Cafe & Light Bites</p>
+            </button>
+
+            <button onclick="showShopPage('coffeeday')" class="shop-button bg-campus-green hover:bg-green-600 text-white p-6 rounded-xl shadow-lg">
+                <div class="text-2xl mb-2">☕</div>
+                <h3 class="text-xl font-bold">Coffee Day</h3>
+                <p class="text-sm mt-2 opacity-90">Coffee & Beverages</p>
+            </button>
+        </div>
+    </div>
+
+    <!-- Shop Pages -->
+    <div id="shopPages" class="hidden">
+        <!-- Back Button -->
+        <div class="container mx-auto px-4 py-4">
+            <button onclick="showHomePage()" class="bg-gray-500 hover:bg-gray-600 text-white px-6 py-2 rounded-lg transition-colors">
+                ← Back to Home
+            </button>
+        </div>
+
+        <!-- Renu's Cafeteria -->
+        <div id="renu" class="shop-page hidden">
+            <div class="container mx-auto px-4 py-8">
+                <div class="text-center mb-8">
+                    <div class="text-6xl mb-4">🍛</div>
+                    <h2 class="text-4xl font-bold text-campus-green mb-2">Renu's Cafeteria</h2>
+                    <p class="text-gray-600 text-lg">Authentic Indian cuisine with traditional flavors</p>
+                    <div class="flex justify-center items-center mt-4 space-x-4">
+                        <span class="bg-campus-green text-white px-3 py-1 rounded-full text-sm">⭐ 4.5/5</span>
+                        <span class="text-gray-600">📍 Behind Open Air Theatre (also accessible via ground)</span>
+                        <span class="text-gray-600">🕒 8:00 AM - 8:00 PM</span>
+                    </div>
+                </div>
+
+                <div class="max-w-6xl mx-auto">
+                    <h3 class="text-2xl font-bold text-gray-800 mb-6">Menu</h3>
+                    
+                    <!-- BREAKFAST Section -->
+                    <div class="mb-8">
+                        <h4 class="text-xl font-bold text-campus-green mb-4 border-b-2 border-campus-green pb-2">🌅 BREAKFAST</h4>
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-green">
+                                <div class="flex justify-between items-center">
+                                    <h5 class="font-semibold text-gray-800">Idly</h5>
+                                    <span class="text-campus-green font-bold">₹40</span>
+                                </div>
+                            </div>
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-green">
+                                <div class="flex justify-between items-center">
+                                    <h5 class="font-semibold text-gray-800">Vada</h5>
+                                    <span class="text-campus-green font-bold">₹10</span>
+                                </div>
+                            </div>
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-green">
+                                <div class="flex justify-between items-center">
+                                    <h5 class="font-semibold text-gray-800">Sambar Idly</h5>
+                                    <span class="text-campus-green font-bold">₹18</span>
+                                </div>
+                            </div>
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-green">
+                                <div class="flex justify-between items-center">
+                                    <h5 class="font-semibold text-gray-800">Poori</h5>
+                                    <span class="text-campus-green font-bold">₹40</span>
+                                </div>
+                            </div>
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-green">
+                                <div class="flex justify-between items-center">
+                                    <h5 class="font-semibold text-gray-800">Chapathi</h5>
+                                    <span class="text-campus-green font-bold">₹40</span>
+                                </div>
+                            </div>
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-green">
+                                <div class="flex justify-between items-center">
+                                    <h5 class="font-semibold text-gray-800">Pongal</h5>
+                                    <span class="text-campus-green font-bold">₹30</span>
+                                </div>
+                            </div>
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-green">
+                                <div class="flex justify-between items-center">
+                                    <h5 class="font-semibold text-gray-800">Kesari</h5>
+                                    <span class="text-campus-green font-bold">₹20</span>
+                                </div>
+                            </div>
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-green">
+                                <div class="flex justify-between items-center">
+                                    <h5 class="font-semibold text-gray-800">Set Dosa (2)</h5>
+                                    <span class="text-campus-green font-bold">₹40</span>
+                                </div>
+                            </div>
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-green">
+                                <div class="flex justify-between items-center">
+                                    <h5 class="font-semibold text-gray-800">Onion Uttapam</h5>
+                                    <span class="text-campus-green font-bold">₹45</span>
+                                </div>
+                            </div>
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-green">
+                                <div class="flex justify-between items-center">
+                                    <h5 class="font-semibold text-gray-800">Plain Uttapam</h5>
+                                    <span class="text-campus-green font-bold">₹40</span>
+                                </div>
+                            </div>
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-green">
+                                <div class="flex justify-between items-center">
+                                    <h5 class="font-semibold text-gray-800">Tea</h5>
+                                    <span class="text-campus-green font-bold">₹15</span>
+                                </div>
+                            </div>
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-green">
+                                <div class="flex justify-between items-center">
+                                    <h5 class="font-semibold text-gray-800">Coffee</h5>
+                                    <span class="text-campus-green font-bold">₹20</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- DOSA Section -->
+                    <div class="mb-8">
+                        <h4 class="text-xl font-bold text-campus-green mb-4 border-b-2 border-campus-green pb-2">🥞 DOSA</h4>
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-green">
+                                <div class="flex justify-between items-center">
+                                    <h5 class="font-semibold text-gray-800">Dosa</h5>
+                                    <span class="text-campus-green font-bold">₹40</span>
+                                </div>
+                            </div>
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-green">
+                                <div class="flex justify-between items-center">
+                                    <h5 class="font-semibold text-gray-800">Masala Dosa</h5>
+                                    <span class="text-campus-green font-bold">₹55</span>
+                                </div>
+                            </div>
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-green">
+                                <div class="flex justify-between items-center">
+                                    <h5 class="font-semibold text-gray-800">Podi Dosa</h5>
+                                    <span class="text-campus-green font-bold">₹50</span>
+                                </div>
+                            </div>
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-green">
+                                <div class="flex justify-between items-center">
+                                    <h5 class="font-semibold text-gray-800">Ghee Dosa</h5>
+                                    <span class="text-campus-green font-bold">₹55</span>
+                                </div>
+                            </div>
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-green">
+                                <div class="flex justify-between items-center">
+                                    <h5 class="font-semibold text-gray-800">Cheese Chilli Garlic Dosa</h5>
+                                    <span class="text-campus-green font-bold">₹60</span>
+                                </div>
+                            </div>
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-green">
+                                <div class="flex justify-between items-center">
+                                    <h5 class="font-semibold text-gray-800">Egg Dosa</h5>
+                                    <span class="text-campus-green font-bold">₹50</span>
+                                </div>
+                            </div>
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-green">
+                                <div class="flex justify-between items-center">
+                                    <h5 class="font-semibold text-gray-800">Chicken Keema Dosa</h5>
+                                    <span class="text-campus-green font-bold">₹70</span>
+                                </div>
+                            </div>
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-green">
+                                <div class="flex justify-between items-center">
+                                    <h5 class="font-semibold text-gray-800">Onion Uttapam</h5>
+                                    <span class="text-campus-green font-bold">₹50</span>
+                                </div>
+                            </div>
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-green">
+                                <div class="flex justify-between items-center">
+                                    <h5 class="font-semibold text-gray-800">Chicken Cheese Dosa</h5>
+                                    <span class="text-campus-green font-bold">₹70</span>
+                                </div>
+                            </div>
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-green">
+                                <div class="flex justify-between items-center">
+                                    <h5 class="font-semibold text-gray-800">Omelette</h5>
+                                    <span class="text-campus-green font-bold">₹25</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- PAROTTA Section -->
+                    <div class="mb-8">
+                        <h4 class="text-xl font-bold text-campus-green mb-4 border-b-2 border-campus-green pb-2">🫓 PAROTTA</h4>
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-green">
+                                <div class="flex justify-between items-center">
+                                    <h5 class="font-semibold text-gray-800">Parotta Set</h5>
+                                    <span class="text-campus-green font-bold">₹40</span>
+                                </div>
+                            </div>
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-green">
+                                <div class="flex justify-between items-center">
+                                    <h5 class="font-semibold text-gray-800">Chapathi Set</h5>
+                                    <span class="text-campus-green font-bold">₹40</span>
+                                </div>
+                            </div>
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-green">
+                                <div class="flex justify-between items-center">
+                                    <h5 class="font-semibold text-gray-800">Parotta Chicken Gravy</h5>
+                                    <span class="text-campus-green font-bold">₹75</span>
+                                </div>
+                            </div>
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-green">
+                                <div class="flex justify-between items-center">
+                                    <h5 class="font-semibold text-gray-800">Chilli Parotta</h5>
+                                    <span class="text-campus-green font-bold">₹70</span>
+                                </div>
+                            </div>
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-green">
+                                <div class="flex justify-between items-center">
+                                    <h5 class="font-semibold text-gray-800">Egg Kothu Parotta</h5>
+                                    <span class="text-campus-green font-bold">₹65</span>
+                                </div>
+                            </div>
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-green">
+                                <div class="flex justify-between items-center">
+                                    <h5 class="font-semibold text-gray-800">Chicken Kothu Parotta</h5>
+                                    <span class="text-campus-green font-bold">₹75</span>
+                                </div>
+                            </div>
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-green">
+                                <div class="flex justify-between items-center">
+                                    <h5 class="font-semibold text-gray-800">Cholapoor Chana Masala</h5>
+                                    <span class="text-campus-green font-bold">₹60</span>
+                                </div>
+                            </div>
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-green">
+                                <div class="flex justify-between items-center">
+                                    <h5 class="font-semibold text-gray-800">Cholapoor Chicken Gravy</h5>
+                                    <span class="text-campus-green font-bold">₹100</span>
+                                </div>
+                            </div>
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-green">
+                                <div class="flex justify-between items-center">
+                                    <h5 class="font-semibold text-gray-800">Bun Parotta</h5>
+                                    <span class="text-campus-green font-bold">₹40</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- STARTERS Section -->
+                    <div class="mb-8">
+                        <h4 class="text-xl font-bold text-campus-green mb-4 border-b-2 border-campus-green pb-2">🍗 STARTERS</h4>
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-green">
+                                <div class="flex justify-between items-center">
+                                    <h5 class="font-semibold text-gray-800">Chilli Chicken</h5>
+                                    <span class="text-campus-green font-bold">₹100</span>
+                                </div>
+                            </div>
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-green">
+                                <div class="flex justify-between items-center">
+                                    <h5 class="font-semibold text-gray-800">Pepper Chicken</h5>
+                                    <span class="text-campus-green font-bold">₹120</span>
+                                </div>
+                            </div>
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-green">
+                                <div class="flex justify-between items-center">
+                                    <h5 class="font-semibold text-gray-800">Chilli Gobi</h5>
+                                    <span class="text-campus-green font-bold">₹90</span>
+                                </div>
+                            </div>
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-green">
+                                <div class="flex justify-between items-center">
+                                    <h5 class="font-semibold text-gray-800">Chilly Egg</h5>
+                                    <span class="text-campus-green font-bold">₹90</span>
+                                </div>
+                            </div>
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-green">
+                                <div class="flex justify-between items-center">
+                                    <h5 class="font-semibold text-gray-800">Babycorn Pepper Fry</h5>
+                                    <span class="text-campus-green font-bold">₹90</span>
+                                </div>
+                            </div>
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-green">
+                                <div class="flex justify-between items-center">
+                                    <h5 class="font-semibold text-gray-800">Chicken Stick</h5>
+                                    <span class="text-campus-green font-bold">₹120</span>
+                                </div>
+                            </div>
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-green">
+                                <div class="flex justify-between items-center">
+                                    <h5 class="font-semibold text-gray-800">Paneer Stick</h5>
+                                    <span class="text-campus-green font-bold">₹100</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- LUNCH - MEALS Section -->
+                    <div class="mb-8">
+                        <h4 class="text-xl font-bold text-campus-green mb-4 border-b-2 border-campus-green pb-2">🍽️ LUNCH - MEALS</h4>
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-green">
+                                <div class="flex justify-between items-center">
+                                    <h5 class="font-semibold text-gray-800">Veg Meals</h5>
+                                    <span class="text-campus-green font-bold">₹95</span>
+                                </div>
+                            </div>
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-green">
+                                <div class="flex justify-between items-center">
+                                    <h5 class="font-semibold text-gray-800">Non Veg Meals</h5>
+                                    <span class="text-campus-green font-bold">₹140</span>
+                                </div>
+                            </div>
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-green">
+                                <div class="flex justify-between items-center">
+                                    <h5 class="font-semibold text-gray-800">Mini Meal (Veg)</h5>
+                                    <span class="text-campus-green font-bold">₹90</span>
+                                </div>
+                            </div>
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-green">
+                                <div class="flex justify-between items-center">
+                                    <h5 class="font-semibold text-gray-800">Mini Meal (Non Veg)</h5>
+                                    <span class="text-campus-green font-bold">₹110</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- LUNCH - RICE / BIRYANI Section -->
+                    <div class="mb-8">
+                        <h4 class="text-xl font-bold text-campus-green mb-4 border-b-2 border-campus-green pb-2">🍚 LUNCH - RICE / BIRYANI</h4>
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-green">
+                                <div class="flex justify-between items-start">
+                                    <h5 class="font-semibold text-gray-800">Variety Rice</h5>
+                                    <span class="text-campus-green font-bold">₹45</span>
+                                </div>
+                                <p class="text-xs text-gray-500 mt-1">(tomato/lemon/mint/curd/sambar/coconut)</p>
+                            </div>
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-green">
+                                <div class="flex justify-between items-center">
+                                    <h5 class="font-semibold text-gray-800">Veg Biriyani</h5>
+                                    <span class="text-campus-green font-bold">₹80</span>
+                                </div>
+                            </div>
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-green">
+                                <div class="flex justify-between items-center">
+                                    <h5 class="font-semibold text-gray-800">Mushroom / Vegetable Biriyani</h5>
+                                    <span class="text-campus-green font-bold">₹110</span>
+                                </div>
+                            </div>
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-green">
+                                <div class="flex justify-between items-center">
+                                    <h5 class="font-semibold text-gray-800">Chicken Biriyani</h5>
+                                    <span class="text-campus-green font-bold">₹110</span>
+                                </div>
+                            </div>
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-green">
+                                <div class="flex justify-between items-center">
+                                    <h5 class="font-semibold text-gray-800">Egg Biriyani</h5>
+                                    <span class="text-campus-green font-bold">₹90</span>
+                                </div>
+                            </div>
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-green">
+                                <div class="flex justify-between items-center">
+                                    <h5 class="font-semibold text-gray-800">Plain Biriyani</h5>
+                                    <span class="text-campus-green font-bold">₹80</span>
+                                </div>
+                            </div>
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-green">
+                                <div class="flex justify-between items-center">
+                                    <h5 class="font-semibold text-gray-800">Chilly Chicken Briyani</h5>
+                                    <span class="text-campus-green font-bold">₹130</span>
+                                </div>
+                            </div>
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-green">
+                                <div class="flex justify-between items-center">
+                                    <h5 class="font-semibold text-gray-800">Ghee Rice Egg Curry</h5>
+                                    <span class="text-campus-green font-bold">₹90</span>
+                                </div>
+                            </div>
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-green">
+                                <div class="flex justify-between items-center">
+                                    <h5 class="font-semibold text-gray-800">Ghee Rice Chicken Curry</h5>
+                                    <span class="text-campus-green font-bold">₹110</span>
+                                </div>
+                            </div>
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-green">
+                                <div class="flex justify-between items-center">
+                                    <h5 class="font-semibold text-gray-800">Egg Gravy</h5>
+                                    <span class="text-campus-green font-bold">₹25</span>
+                                </div>
+                            </div>
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-green">
+                                <div class="flex justify-between items-center">
+                                    <h5 class="font-semibold text-gray-800">Chicken Gravy</h5>
+                                    <span class="text-campus-green font-bold">₹90</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- CHINESE COUNTER Section -->
+                    <div class="mb-8">
+                        <h4 class="text-xl font-bold text-campus-green mb-4 border-b-2 border-campus-green pb-2">🥢 CHINESE COUNTER (Fried Rice / Noodles)</h4>
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-green">
+                                <div class="flex justify-between items-start">
+                                    <h5 class="font-semibold text-gray-800">Veg</h5>
+                                    <div class="text-right">
+                                        <div class="text-campus-green font-bold">Regular: ₹80</div>
+                                        <div class="text-campus-green font-bold">SCZ: ₹85</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-green">
+                                <div class="flex justify-between items-start">
+                                    <h5 class="font-semibold text-gray-800">Egg</h5>
+                                    <div class="text-right">
+                                        <div class="text-campus-green font-bold">Regular: ₹90</div>
+                                        <div class="text-campus-green font-bold">SCZ: ₹95</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-green">
+                                <div class="flex justify-between items-start">
+                                    <h5 class="font-semibold text-gray-800">Paneer</h5>
+                                    <div class="text-right">
+                                        <div class="text-campus-green font-bold">Regular: ₹110</div>
+                                        <div class="text-campus-green font-bold">SCZ: ₹115</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-green">
+                                <div class="flex justify-between items-start">
+                                    <h5 class="font-semibold text-gray-800">Gobi</h5>
+                                    <div class="text-right">
+                                        <div class="text-campus-green font-bold">Regular: ₹110</div>
+                                        <div class="text-campus-green font-bold">SCZ: ₹115</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-green">
+                                <div class="flex justify-between items-start">
+                                    <h5 class="font-semibold text-gray-800">Chicken</h5>
+                                    <div class="text-right">
+                                        <div class="text-campus-green font-bold">Regular: ₹110</div>
+                                        <div class="text-campus-green font-bold">SCZ: ₹115</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- MADURAI BUTTER BUN Section -->
+                    <div class="mb-8">
+                        <h4 class="text-xl font-bold text-campus-green mb-4 border-b-2 border-campus-green pb-2">🥖 MADURAI BUTTER BUN</h4>
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-green">
+                                <div class="flex justify-between items-center">
+                                    <h5 class="font-semibold text-gray-800">Sugar Butter Bun</h5>
+                                    <span class="text-campus-green font-bold">₹40</span>
+                                </div>
+                            </div>
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-green">
+                                <div class="flex justify-between items-center">
+                                    <h5 class="font-semibold text-gray-800">Jam Butter Bun</h5>
+                                    <span class="text-campus-green font-bold">₹50</span>
+                                </div>
+                            </div>
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-green">
+                                <div class="flex justify-between items-center">
+                                    <h5 class="font-semibold text-gray-800">Egg Masala Bun</h5>
+                                    <span class="text-campus-green font-bold">₹50</span>
+                                </div>
+                            </div>
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-green">
+                                <div class="flex justify-between items-center">
+                                    <h5 class="font-semibold text-gray-800">Chicken Sukka Bun</h5>
+                                    <span class="text-campus-green font-bold">₹60</span>
+                                </div>
+                            </div>
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-green">
+                                <div class="flex justify-between items-center">
+                                    <h5 class="font-semibold text-gray-800">Paneer Masala Bun</h5>
+                                    <span class="text-campus-green font-bold">₹60</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- NEW PRODUCTS Section -->
+                    <div class="mb-8">
+                        <h4 class="text-xl font-bold text-campus-green mb-4 border-b-2 border-campus-green pb-2">🆕 NEW PRODUCTS</h4>
+                        
+                        <!-- KATHI ROLL Subsection -->
+                        <div class="mb-6">
+                            <h5 class="text-lg font-semibold text-gray-700 mb-3 pl-4 border-l-2 border-campus-green">🌯 KATHI ROLL</h5>
+                            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                                <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-green">
+                                    <div class="flex justify-between items-center">
+                                        <h5 class="font-semibold text-gray-800">Veg Roll</h5>
+                                        <span class="text-campus-green font-bold">₹60</span>
+                                    </div>
+                                </div>
+                                <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-green">
+                                    <div class="flex justify-between items-center">
+                                        <h5 class="font-semibold text-gray-800">Paneer Roll</h5>
+                                        <span class="text-campus-green font-bold">₹70</span>
+                                    </div>
+                                </div>
+                                <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-green">
+                                    <div class="flex justify-between items-center">
+                                        <h5 class="font-semibold text-gray-800">Egg Roll</h5>
+                                        <span class="text-campus-green font-bold">₹60</span>
+                                    </div>
+                                </div>
+                                <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-green">
+                                    <div class="flex justify-between items-center">
+                                        <h5 class="font-semibold text-gray-800">Chicken Roll</h5>
+                                        <span class="text-campus-green font-bold">₹70</span>
+                                    </div>
+                                </div>
+                                <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-green">
+                                    <div class="flex justify-between items-center">
+                                        <h5 class="font-semibold text-gray-800">Crispy Fried Chicken Roll</h5>
+                                        <span class="text-campus-green font-bold">₹90</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- SANDWICH Subsection -->
+                        <div class="mb-6">
+                            <h5 class="text-lg font-semibold text-gray-700 mb-3 pl-4 border-l-2 border-campus-green">🥪 SANDWICH</h5>
+                            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                                <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-green">
+                                    <div class="flex justify-between items-center">
+                                        <h5 class="font-semibold text-gray-800">Veg Mayo</h5>
+                                        <span class="text-campus-green font-bold">₹60</span>
+                                    </div>
+                                </div>
+                                <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-green">
+                                    <div class="flex justify-between items-center">
+                                        <h5 class="font-semibold text-gray-800">Egg Sandwich</h5>
+                                        <span class="text-campus-green font-bold">₹60</span>
+                                    </div>
+                                </div>
+                                <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-green">
+                                    <div class="flex justify-between items-center">
+                                        <h5 class="font-semibold text-gray-800">Corn & Cheese</h5>
+                                        <span class="text-campus-green font-bold">₹70</span>
+                                    </div>
+                                </div>
+                                <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-green">
+                                    <div class="flex justify-between items-center">
+                                        <h5 class="font-semibold text-gray-800">Paneer Tikka</h5>
+                                        <span class="text-campus-green font-bold">₹70</span>
+                                    </div>
+                                </div>
+                                <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-green">
+                                    <div class="flex justify-between items-center">
+                                        <h5 class="font-semibold text-gray-800">Chicken Tikka</h5>
+                                        <span class="text-campus-green font-bold">₹70</span>
+                                    </div>
+                                </div>
+                                <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-green">
+                                    <div class="flex justify-between items-center">
+                                        <h5 class="font-semibold text-gray-800">Chicken Cheese</h5>
+                                        <span class="text-campus-green font-bold">₹70</span>
+                                    </div>
+                                </div>
+                                <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-green">
+                                    <div class="flex justify-between items-center">
+                                        <h5 class="font-semibold text-gray-800">Paneer Cheese</h5>
+                                        <span class="text-campus-green font-bold">₹70</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- FRESH JUICE Section -->
+                    <div class="mb-8">
+                        <h4 class="text-xl font-bold text-campus-green mb-4 border-b-2 border-campus-green pb-2">🧃 FRESH JUICE</h4>
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-green">
+                                <div class="flex justify-between items-center">
+                                    <h5 class="font-semibold text-gray-800">Watermelon</h5>
+                                    <span class="text-campus-green font-bold">₹30</span>
+                                </div>
+                            </div>
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-green">
+                                <div class="flex justify-between items-center">
+                                    <h5 class="font-semibold text-gray-800">Muskmelon</h5>
+                                    <span class="text-campus-green font-bold">₹30</span>
+                                </div>
+                            </div>
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-green">
+                                <div class="flex justify-between items-center">
+                                    <h5 class="font-semibold text-gray-800">Lemon Mint</h5>
+                                    <span class="text-campus-green font-bold">₹40</span>
+                                </div>
+                            </div>
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-green">
+                                <div class="flex justify-between items-center">
+                                    <h5 class="font-semibold text-gray-800">Mosambi</h5>
+                                    <span class="text-campus-green font-bold">₹40</span>
+                                </div>
+                            </div>
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-green">
+                                <div class="flex justify-between items-center">
+                                    <h5 class="font-semibold text-gray-800">Apple</h5>
+                                    <span class="text-campus-green font-bold">₹50</span>
+                                </div>
+                            </div>
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-green">
+                                <div class="flex justify-between items-center">
+                                    <h5 class="font-semibold text-gray-800">Pomegranate</h5>
+                                    <span class="text-campus-green font-bold">₹50</span>
+                                </div>
+                            </div>
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-green">
+                                <div class="flex justify-between items-center">
+                                    <h5 class="font-semibold text-gray-800">Orange</h5>
+                                    <span class="text-campus-green font-bold">₹50</span>
+                                </div>
+                            </div>
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-green">
+                                <div class="flex justify-between items-center">
+                                    <h5 class="font-semibold text-gray-800">Carrot</h5>
+                                    <span class="text-campus-green font-bold">₹40</span>
+                                </div>
+                            </div>
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-green">
+                                <div class="flex justify-between items-center">
+                                    <h5 class="font-semibold text-gray-800">Avocado</h5>
+                                    <span class="text-campus-green font-bold">₹70</span>
+                                </div>
+                            </div>
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-green">
+                                <div class="flex justify-between items-center">
+                                    <h5 class="font-semibold text-gray-800">Banana</h5>
+                                    <span class="text-campus-green font-bold">₹20</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- MILKSHAKE Section -->
+                    <div class="mb-8">
+                        <h4 class="text-xl font-bold text-campus-green mb-4 border-b-2 border-campus-green pb-2">🥤 MILKSHAKE</h4>
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-green">
+                                <div class="flex justify-between items-center">
+                                    <h5 class="font-semibold text-gray-800">Mango</h5>
+                                    <span class="text-campus-green font-bold">₹60</span>
+                                </div>
+                            </div>
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-green">
+                                <div class="flex justify-between items-center">
+                                    <h5 class="font-semibold text-gray-800">Kiwi</h5>
+                                    <span class="text-campus-green font-bold">₹60</span>
+                                </div>
+                            </div>
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-green">
+                                <div class="flex justify-between items-center">
+                                    <h5 class="font-semibold text-gray-800">Litchi</h5>
+                                    <span class="text-campus-green font-bold">₹60</span>
+                                </div>
+                            </div>
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-green">
+                                <div class="flex justify-between items-center">
+                                    <h5 class="font-semibold text-gray-800">Cold Coffee</h5>
+                                    <span class="text-campus-green font-bold">₹60</span>
+                                </div>
+                            </div>
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-green">
+                                <div class="flex justify-between items-center">
+                                    <h5 class="font-semibold text-gray-800">Chocolate</h5>
+                                    <span class="text-campus-green font-bold">₹60</span>
+                                </div>
+                            </div>
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-green">
+                                <div class="flex justify-between items-center">
+                                    <h5 class="font-semibold text-gray-800">Strawberry</h5>
+                                    <span class="text-campus-green font-bold">₹60</span>
+                                </div>
+                            </div>
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-green">
+                                <div class="flex justify-between items-center">
+                                    <h5 class="font-semibold text-gray-800">Black Currant</h5>
+                                    <span class="text-campus-green font-bold">₹60</span>
+                                </div>
+                            </div>
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-green">
+                                <div class="flex justify-between items-center">
+                                    <h5 class="font-semibold text-gray-800">Butter Scotch</h5>
+                                    <span class="text-campus-green font-bold">₹60</span>
+                                </div>
+                            </div>
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-green">
+                                <div class="flex justify-between items-center">
+                                    <h5 class="font-semibold text-gray-800">Rose Milk Shake</h5>
+                                    <span class="text-campus-green font-bold">₹60</span>
+                                </div>
+                            </div>
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-green">
+                                <div class="flex justify-between items-center">
+                                    <h5 class="font-semibold text-gray-800">Badam Milk Shake</h5>
+                                    <span class="text-campus-green font-bold">₹60</span>
+                                </div>
+                            </div>
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-green">
+                                <div class="flex justify-between items-center">
+                                    <h5 class="font-semibold text-gray-800">Kitkat Milk Shake</h5>
+                                    <span class="text-campus-green font-bold">₹70</span>
+                                </div>
+                            </div>
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-green">
+                                <div class="flex justify-between items-center">
+                                    <h5 class="font-semibold text-gray-800">Oreo Milk Shake</h5>
+                                    <span class="text-campus-green font-bold">₹70</span>
+                                </div>
+                            </div>
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-green">
+                                <div class="flex justify-between items-center">
+                                    <h5 class="font-semibold text-gray-800">Omenad Milk Shake</h5>
+                                    <span class="text-campus-green font-bold">₹70</span>
+                                </div>
+                            </div>
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-green">
+                                <div class="flex justify-between items-center">
+                                    <h5 class="font-semibold text-gray-800">Brownie Milk Shake</h5>
+                                    <span class="text-campus-green font-bold">₹80</span>
+                                </div>
+                            </div>
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-green">
+                                <div class="flex justify-between items-center">
+                                    <h5 class="font-semibold text-gray-800">Galaxy Milk Shake</h5>
+                                    <span class="text-campus-green font-bold">₹80</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                </div>
+            </div>
+        </div>
+
+        <!-- Chewz -->
+        <div id="chewz" class="shop-page hidden">
+            <div class="container mx-auto px-4 py-8">
+                <div class="text-center mb-8">
+                    <div class="text-6xl mb-4">🍕</div>
+                    <h2 class="text-4xl font-bold text-campus-green mb-2">Chewz</h2>
+                    <p class="text-gray-600 text-lg">Quick bites and fast food favorites</p>
+                    <div class="flex justify-center items-center mt-4 space-x-4">
+                        <span class="bg-campus-green text-white px-3 py-1 rounded-full text-sm">⭐ 4.2/5</span>
+                        <span class="text-gray-600">📍 Food Court, near and opposite to J-Block</span>
+                        <span class="text-gray-600">🕒 10:00 AM - 10:00 PM</span>
+                    </div>
+                </div>
+
+                <div class="max-w-6xl mx-auto">
+                    <h3 class="text-2xl font-bold text-gray-800 mb-6">HOT EATS Menu</h3>
+                    
+                    <!-- FRIES Section -->
+                    <div class="mb-8">
+                        <h4 class="text-xl font-bold text-campus-green mb-4 border-b-2 border-campus-green pb-2">🍟 FRIES</h4>
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-green">
+                                <div class="flex justify-between items-center">
+                                    <h5 class="font-semibold text-gray-800">Spring Potato</h5>
+                                    <span class="text-campus-green font-bold">₹40</span>
+                                </div>
+                            </div>
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-green">
+                                <div class="flex justify-between items-center">
+                                    <h5 class="font-semibold text-gray-800">French Fries</h5>
+                                    <span class="text-campus-green font-bold">₹50</span>
+                                </div>
+                            </div>
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-green">
+                                <div class="flex justify-between items-center">
+                                    <h5 class="font-semibold text-gray-800">Mexican Fries</h5>
+                                    <span class="text-campus-green font-bold">₹60</span>
+                                </div>
+                            </div>
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-green">
+                                <div class="flex justify-between items-center">
+                                    <h5 class="font-semibold text-gray-800">Cheese Fries</h5>
+                                    <span class="text-campus-green font-bold">₹70</span>
+                                </div>
+                            </div>
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-green">
+                                <div class="flex justify-between items-center">
+                                    <h5 class="font-semibold text-gray-800">Chicken Nuggets</h5>
+                                    <span class="text-campus-green font-bold">₹80</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- SANDWICH Section -->
+                    <div class="mb-8">
+                        <h4 class="text-xl font-bold text-campus-green mb-4 border-b-2 border-campus-green pb-2">🥪 SANDWICH</h4>
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-green">
+                                <div class="flex justify-between items-center">
+                                    <h5 class="font-semibold text-gray-800">Chocolate Sandwich</h5>
+                                    <span class="text-campus-green font-bold">₹40</span>
+                                </div>
+                            </div>
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-green">
+                                <div class="flex justify-between items-center">
+                                    <h5 class="font-semibold text-gray-800">Veg Mayo</h5>
+                                    <span class="text-campus-green font-bold">₹60</span>
+                                </div>
+                            </div>
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-green">
+                                <div class="flex justify-between items-center">
+                                    <h5 class="font-semibold text-gray-800">Egg Sandwich</h5>
+                                    <span class="text-campus-green font-bold">₹60</span>
+                                </div>
+                            </div>
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-green">
+                                <div class="flex justify-between items-center">
+                                    <h5 class="font-semibold text-gray-800">Corn & Cheese</h5>
+                                    <span class="text-campus-green font-bold">₹70</span>
+                                </div>
+                            </div>
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-green">
+                                <div class="flex justify-between items-center">
+                                    <h5 class="font-semibold text-gray-800">Paneer Tikka</h5>
+                                    <span class="text-campus-green font-bold">₹70</span>
+                                </div>
+                            </div>
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-green">
+                                <div class="flex justify-between items-center">
+                                    <h5 class="font-semibold text-gray-800">Chicken Tikka</h5>
+                                    <span class="text-campus-green font-bold">₹70</span>
+                                </div>
+                            </div>
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-green">
+                                <div class="flex justify-between items-center">
+                                    <h5 class="font-semibold text-gray-800">Chicken Cheese</h5>
+                                    <span class="text-campus-green font-bold">₹80</span>
+                                </div>
+                            </div>
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-green">
+                                <div class="flex justify-between items-center">
+                                    <h5 class="font-semibold text-gray-800">Paneer Cheese</h5>
+                                    <span class="text-campus-green font-bold">₹80</span>
+                                </div>
+                            </div>
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-green">
+                                <div class="flex justify-between items-center">
+                                    <h5 class="font-semibold text-gray-800">Chicken Club Sandwich</h5>
+                                    <span class="text-campus-green font-bold">₹120</span>
+                                </div>
+                            </div>
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-green">
+                                <div class="flex justify-between items-center">
+                                    <h5 class="font-semibold text-gray-800">Paneer Club Sandwich</h5>
+                                    <span class="text-campus-green font-bold">₹120</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- MADURAI BUTTER BUN Section -->
+                    <div class="mb-8">
+                        <h4 class="text-xl font-bold text-campus-green mb-4 border-b-2 border-campus-green pb-2">🥖 MADURAI BUTTER BUN</h4>
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-green">
+                                <div class="flex justify-between items-center">
+                                    <h5 class="font-semibold text-gray-800">Sugar Butter Bun</h5>
+                                    <span class="text-campus-green font-bold">₹40</span>
+                                </div>
+                            </div>
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-green">
+                                <div class="flex justify-between items-center">
+                                    <h5 class="font-semibold text-gray-800">Jam Butter Bun</h5>
+                                    <span class="text-campus-green font-bold">₹50</span>
+                                </div>
+                            </div>
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-green">
+                                <div class="flex justify-between items-center">
+                                    <h5 class="font-semibold text-gray-800">Egg Masala Bun</h5>
+                                    <span class="text-campus-green font-bold">₹50</span>
+                                </div>
+                            </div>
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-green">
+                                <div class="flex justify-between items-center">
+                                    <h5 class="font-semibold text-gray-800">Chicken Sukka Bun</h5>
+                                    <span class="text-campus-green font-bold">₹60</span>
+                                </div>
+                            </div>
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-green">
+                                <div class="flex justify-between items-center">
+                                    <h5 class="font-semibold text-gray-800">Paneer Masala Bun</h5>
+                                    <span class="text-campus-green font-bold">₹60</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- TORTILLA Section -->
+                    <div class="mb-8">
+                        <h4 class="text-xl font-bold text-campus-green mb-4 border-b-2 border-campus-green pb-2">🌯 TORTILLA</h4>
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-green">
+                                <div class="flex justify-between items-center">
+                                    <h5 class="font-semibold text-gray-800">Veg</h5>
+                                    <span class="text-campus-green font-bold">₹60</span>
+                                </div>
+                            </div>
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-green">
+                                <div class="flex justify-between items-center">
+                                    <h5 class="font-semibold text-gray-800">Paneer</h5>
+                                    <span class="text-campus-green font-bold">₹70</span>
+                                </div>
+                            </div>
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-green">
+                                <div class="flex justify-between items-center">
+                                    <h5 class="font-semibold text-gray-800">Chicken</h5>
+                                    <span class="text-campus-green font-bold">₹70</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- MAGGI Section -->
+                    <div class="mb-8">
+                        <h4 class="text-xl font-bold text-campus-green mb-4 border-b-2 border-campus-green pb-2">🍜 MAGGI</h4>
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-green">
+                                <div class="flex justify-between items-center">
+                                    <h5 class="font-semibold text-gray-800">Plain</h5>
+                                    <span class="text-campus-green font-bold">₹40</span>
+                                </div>
+                            </div>
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-green">
+                                <div class="flex justify-between items-center">
+                                    <h5 class="font-semibold text-gray-800">Cheese</h5>
+                                    <span class="text-campus-green font-bold">₹50</span>
+                                </div>
+                            </div>
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-green">
+                                <div class="flex justify-between items-center">
+                                    <h5 class="font-semibold text-gray-800">Egg</h5>
+                                    <span class="text-campus-green font-bold">₹50</span>
+                                </div>
+                            </div>
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-green">
+                                <div class="flex justify-between items-center">
+                                    <h5 class="font-semibold text-gray-800">Italian</h5>
+                                    <span class="text-campus-green font-bold">₹60</span>
+                                </div>
+                            </div>
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-green">
+                                <div class="flex justify-between items-center">
+                                    <h5 class="font-semibold text-gray-800">Schezwan</h5>
+                                    <span class="text-campus-green font-bold">₹60</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- BIRIYANI Section -->
+                    <div class="mb-8">
+                        <h4 class="text-xl font-bold text-campus-green mb-4 border-b-2 border-campus-green pb-2">🍚 BIRIYANI</h4>
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-green">
+                                <div class="flex justify-between items-center">
+                                    <h5 class="font-semibold text-gray-800">Chicken Biriyani</h5>
+                                    <span class="text-campus-green font-bold">₹100</span>
+                                </div>
+                            </div>
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-green">
+                                <div class="flex justify-between items-center">
+                                    <h5 class="font-semibold text-gray-800">Egg Biriyani</h5>
+                                    <span class="text-campus-green font-bold">₹80</span>
+                                </div>
+                            </div>
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-green">
+                                <div class="flex justify-between items-center">
+                                    <h5 class="font-semibold text-gray-800">Mutton Biriyani</h5>
+                                    <span class="text-campus-green font-bold">₹120</span>
+                                </div>
+                            </div>
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-green">
+                                <div class="flex justify-between items-center">
+                                    <h5 class="font-semibold text-gray-800">Chili Chicken Biriyani</h5>
+                                    <span class="text-campus-green font-bold">₹120</span>
+                                </div>
+                            </div>
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-green">
+                                <div class="flex justify-between items-center">
+                                    <h5 class="font-semibold text-gray-800">Pepper Chicken Biriyani</h5>
+                                    <span class="text-campus-green font-bold">₹120</span>
+                                </div>
+                            </div>
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-green">
+                                <div class="flex justify-between items-center">
+                                    <h5 class="font-semibold text-gray-800">Ghee Rice with Egg Curry</h5>
+                                    <span class="text-campus-green font-bold">₹90</span>
+                                </div>
+                            </div>
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-green">
+                                <div class="flex justify-between items-center">
+                                    <h5 class="font-semibold text-gray-800">Ghee Rice with Chicken Curry</h5>
+                                    <span class="text-campus-green font-bold">₹100</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- PAROTTA Section -->
+                    <div class="mb-8">
+                        <h4 class="text-xl font-bold text-campus-green mb-4 border-b-2 border-campus-green pb-2">🫓 PAROTTA</h4>
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-green">
+                                <div class="flex justify-between items-center">
+                                    <h5 class="font-semibold text-gray-800">Parotta Set</h5>
+                                    <span class="text-campus-green font-bold">₹45</span>
+                                </div>
+                            </div>
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-green">
+                                <div class="flex justify-between items-center">
+                                    <h5 class="font-semibold text-gray-800">Chapati Set</h5>
+                                    <span class="text-campus-green font-bold">₹45</span>
+                                </div>
+                            </div>
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-green">
+                                <div class="flex justify-between items-center">
+                                    <h5 class="font-semibold text-gray-800">Parotta Chicken Gravy</h5>
+                                    <span class="text-campus-green font-bold">₹100</span>
+                                </div>
+                            </div>
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-green">
+                                <div class="flex justify-between items-center">
+                                    <h5 class="font-semibold text-gray-800">Chilli Parotta</h5>
+                                    <span class="text-campus-green font-bold">₹80</span>
+                                </div>
+                            </div>
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-green">
+                                <div class="flex justify-between items-center">
+                                    <h5 class="font-semibold text-gray-800">Egg Kothu Parotta</h5>
+                                    <span class="text-campus-green font-bold">₹100</span>
+                                </div>
+                            </div>
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-green">
+                                <div class="flex justify-between items-center">
+                                    <h5 class="font-semibold text-gray-800">Chicken Kothu Parotta</h5>
+                                    <span class="text-campus-green font-bold">₹110</span>
+                                </div>
+                            </div>
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-green">
+                                <div class="flex justify-between items-center">
+                                    <h5 class="font-semibold text-gray-800">Pepper Fried Parotta</h5>
+                                    <span class="text-campus-green font-bold">₹110</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- BREADS Section -->
+                    <div class="mb-8">
+                        <h4 class="text-xl font-bold text-campus-green mb-4 border-b-2 border-campus-green pb-2">🍞 BREADS</h4>
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-green">
+                                <div class="flex justify-between items-center">
+                                    <h5 class="font-semibold text-gray-800">Bread Omelette</h5>
+                                    <span class="text-campus-green font-bold">₹40</span>
+                                </div>
+                            </div>
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-green">
+                                <div class="flex justify-between items-center">
+                                    <h5 class="font-semibold text-gray-800">Paneer Bread Omelette</h5>
+                                    <span class="text-campus-green font-bold">₹50</span>
+                                </div>
+                            </div>
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-green">
+                                <div class="flex justify-between items-center">
+                                    <h5 class="font-semibold text-gray-800">Chicken Bread Omelette</h5>
+                                    <span class="text-campus-green font-bold">₹60</span>
+                                </div>
+                            </div>
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-green">
+                                <div class="flex justify-between items-center">
+                                    <h5 class="font-semibold text-gray-800">Chicken Cheese Bread Omelette</h5>
+                                    <span class="text-campus-green font-bold">₹70</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- QUICK BITEZ Section -->
+                    <div class="mb-8">
+                        <h4 class="text-xl font-bold text-campus-green mb-4 border-b-2 border-campus-green pb-2">⚡ QUICK BITEZ</h4>
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-green">
+                                <div class="flex justify-between items-center">
+                                    <h5 class="font-semibold text-gray-800">Veg Roll</h5>
+                                    <span class="text-campus-green font-bold">₹25</span>
+                                </div>
+                            </div>
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-green">
+                                <div class="flex justify-between items-center">
+                                    <h5 class="font-semibold text-gray-800">Chicken Roll</h5>
+                                    <span class="text-campus-green font-bold">₹40</span>
+                                </div>
+                            </div>
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-green">
+                                <div class="flex justify-between items-center">
+                                    <h5 class="font-semibold text-gray-800">Egg Samosa</h5>
+                                    <span class="text-campus-green font-bold">₹20</span>
+                                </div>
+                            </div>
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-green">
+                                <div class="flex justify-between items-center">
+                                    <h5 class="font-semibold text-gray-800">Chicken Cutlet</h5>
+                                    <span class="text-campus-green font-bold">₹25</span>
+                                </div>
+                            </div>
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-green">
+                                <div class="flex justify-between items-center">
+                                    <h5 class="font-semibold text-gray-800">Honey Pudding</h5>
+                                    <span class="text-campus-green font-bold">₹40</span>
+                                </div>
+                            </div>
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-green">
+                                <div class="flex justify-between items-center">
+                                    <h5 class="font-semibold text-gray-800">Chocolate Donut</h5>
+                                    <span class="text-campus-green font-bold">₹40</span>
+                                </div>
+                            </div>
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-green">
+                                <div class="flex justify-between items-center">
+                                    <h5 class="font-semibold text-gray-800">Tea</h5>
+                                    <span class="text-campus-green font-bold">₹15</span>
+                                </div>
+                            </div>
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-green">
+                                <div class="flex justify-between items-center">
+                                    <h5 class="font-semibold text-gray-800">Coffee</h5>
+                                    <span class="text-campus-green font-bold">₹20</span>
+                                </div>
+                            </div>
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-green">
+                                <div class="flex justify-between items-center">
+                                    <h5 class="font-semibold text-gray-800">Vada / Ponda Bajji</h5>
+                                    <span class="text-campus-green font-bold">₹20</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- CRUSHERS Section -->
+                    <div class="mb-8">
+                        <h4 class="text-xl font-bold text-campus-green mb-4 border-b-2 border-campus-green pb-2">🧊 CRUSHERS</h4>
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-green">
+                                <div class="flex justify-between items-center">
+                                    <h5 class="font-semibold text-gray-800">Chilli Oodka</h5>
+                                    <span class="text-campus-green font-bold">₹40</span>
+                                </div>
+                            </div>
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-green">
+                                <div class="flex justify-between items-center">
+                                    <h5 class="font-semibold text-gray-800">Boomer Uncle</h5>
+                                    <span class="text-campus-green font-bold">₹40</span>
+                                </div>
+                            </div>
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-green">
+                                <div class="flex justify-between items-center">
+                                    <h5 class="font-semibold text-gray-800">Sunrise</h5>
+                                    <span class="text-campus-green font-bold">₹40</span>
+                                </div>
+                            </div>
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-green">
+                                <div class="flex justify-between items-center">
+                                    <h5 class="font-semibold text-gray-800">U & Me</h5>
+                                    <span class="text-campus-green font-bold">₹40</span>
+                                </div>
+                            </div>
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-green">
+                                <div class="flex justify-between items-center">
+                                    <h5 class="font-semibold text-gray-800">Mojito</h5>
+                                    <span class="text-campus-green font-bold">₹40</span>
+                                </div>
+                            </div>
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-green">
+                                <div class="flex justify-between items-center">
+                                    <h5 class="font-semibold text-gray-800">Bluemoon</h5>
+                                    <span class="text-campus-green font-bold">₹40</span>
+                                </div>
+                            </div>
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-green">
+                                <div class="flex justify-between items-center">
+                                    <h5 class="font-semibold text-gray-800">Kiwi Dots</h5>
+                                    <span class="text-campus-green font-bold">₹40</span>
+                                </div>
+                            </div>
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-green">
+                                <div class="flex justify-between items-center">
+                                    <h5 class="font-semibold text-gray-800">Black Prince</h5>
+                                    <span class="text-campus-green font-bold">₹40</span>
+                                </div>
+                            </div>
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-green">
+                                <div class="flex justify-between items-center">
+                                    <h5 class="font-semibold text-gray-800">Pink Lady</h5>
+                                    <span class="text-campus-green font-bold">₹40</span>
+                                </div>
+                            </div>
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-green">
+                                <div class="flex justify-between items-center">
+                                    <h5 class="font-semibold text-gray-800">Fantasy</h5>
+                                    <span class="text-campus-green font-bold">₹40</span>
+                                </div>
+                            </div>
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-green">
+                                <div class="flex justify-between items-center">
+                                    <h5 class="font-semibold text-gray-800">Maddy Boy</h5>
+                                    <span class="text-campus-green font-bold">₹40</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- MADURAI BUTTER BUN Section -->
+                    <div class="mb-8">
+                        <h4 class="text-xl font-bold text-campus-green mb-4 border-b-2 border-campus-green pb-2">🥖 MADURAI BUTTER BUN</h4>
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-green">
+                                <div class="flex justify-between items-center">
+                                    <h5 class="font-semibold text-gray-800">Sugar Butter Bun</h5>
+                                    <span class="text-campus-green font-bold">₹40</span>
+                                </div>
+                            </div>
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-green">
+                                <div class="flex justify-between items-center">
+                                    <h5 class="font-semibold text-gray-800">Jam Butter Bun</h5>
+                                    <span class="text-campus-green font-bold">₹50</span>
+                                </div>
+                            </div>
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-green">
+                                <div class="flex justify-between items-center">
+                                    <h5 class="font-semibold text-gray-800">Egg Masala Bun</h5>
+                                    <span class="text-campus-green font-bold">₹50</span>
+                                </div>
+                            </div>
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-green">
+                                <div class="flex justify-between items-center">
+                                    <h5 class="font-semibold text-gray-800">Chicken Sukka Bun</h5>
+                                    <span class="text-campus-green font-bold">₹60</span>
+                                </div>
+                            </div>
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-green">
+                                <div class="flex justify-between items-center">
+                                    <h5 class="font-semibold text-gray-800">Paneer Masala Bun</h5>
+                                    <span class="text-campus-green font-bold">₹60</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- NEW PRODUCTS Section -->
+                    <div class="mb-8">
+                        <h4 class="text-xl font-bold text-campus-green mb-4 border-b-2 border-campus-green pb-2">🆕 NEW PRODUCTS</h4>
+                        
+                        <!-- KATHI ROLL Subsection -->
+                        <div class="mb-6">
+                            <h5 class="text-lg font-semibold text-gray-700 mb-3 pl-4 border-l-2 border-campus-green">🌯 KATHI ROLL</h5>
+                            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                                <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-green">
+                                    <div class="flex justify-between items-center">
+                                        <h5 class="font-semibold text-gray-800">Veg Roll</h5>
+                                        <span class="text-campus-green font-bold">₹60</span>
+                                    </div>
+                                </div>
+                                <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-green">
+                                    <div class="flex justify-between items-center">
+                                        <h5 class="font-semibold text-gray-800">Paneer Roll</h5>
+                                        <span class="text-campus-green font-bold">₹70</span>
+                                    </div>
+                                </div>
+                                <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-green">
+                                    <div class="flex justify-between items-center">
+                                        <h5 class="font-semibold text-gray-800">Egg Roll</h5>
+                                        <span class="text-campus-green font-bold">₹60</span>
+                                    </div>
+                                </div>
+                                <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-green">
+                                    <div class="flex justify-between items-center">
+                                        <h5 class="font-semibold text-gray-800">Chicken Roll</h5>
+                                        <span class="text-campus-green font-bold">₹70</span>
+                                    </div>
+                                </div>
+                                <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-green">
+                                    <div class="flex justify-between items-center">
+                                        <h5 class="font-semibold text-gray-800">Crispy Fried Chicken Roll</h5>
+                                        <span class="text-campus-green font-bold">₹90</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- SANDWICH Subsection -->
+                        <div class="mb-6">
+                            <h5 class="text-lg font-semibold text-gray-700 mb-3 pl-4 border-l-2 border-campus-green">🥪 SANDWICH</h5>
+                            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                                <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-green">
+                                    <div class="flex justify-between items-center">
+                                        <h5 class="font-semibold text-gray-800">Veg Mayo</h5>
+                                        <span class="text-campus-green font-bold">₹60</span>
+                                    </div>
+                                </div>
+                                <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-green">
+                                    <div class="flex justify-between items-center">
+                                        <h5 class="font-semibold text-gray-800">Egg Sandwich</h5>
+                                        <span class="text-campus-green font-bold">₹60</span>
+                                    </div>
+                                </div>
+                                <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-green">
+                                    <div class="flex justify-between items-center">
+                                        <h5 class="font-semibold text-gray-800">Corn & Cheese</h5>
+                                        <span class="text-campus-green font-bold">₹70</span>
+                                    </div>
+                                </div>
+                                <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-green">
+                                    <div class="flex justify-between items-center">
+                                        <h5 class="font-semibold text-gray-800">Paneer Tikka</h5>
+                                        <span class="text-campus-green font-bold">₹70</span>
+                                    </div>
+                                </div>
+                                <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-green">
+                                    <div class="flex justify-between items-center">
+                                        <h5 class="font-semibold text-gray-800">Chicken Tikka</h5>
+                                        <span class="text-campus-green font-bold">₹70</span>
+                                    </div>
+                                </div>
+                                <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-green">
+                                    <div class="flex justify-between items-center">
+                                        <h5 class="font-semibold text-gray-800">Chicken Cheese</h5>
+                                        <span class="text-campus-green font-bold">₹70</span>
+                                    </div>
+                                </div>
+                                <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-green">
+                                    <div class="flex justify-between items-center">
+                                        <h5 class="font-semibold text-gray-800">Paneer Cheese</h5>
+                                        <span class="text-campus-green font-bold">₹70</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- FRESH JUICE Section -->
+                    <div class="mb-8">
+                        <h4 class="text-xl font-bold text-campus-green mb-4 border-b-2 border-campus-green pb-2">🧃 FRESH JUICE</h4>
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-green">
+                                <div class="flex justify-between items-center">
+                                    <h5 class="font-semibold text-gray-800">Water Melon</h5>
+                                    <span class="text-campus-green font-bold">₹30</span>
+                                </div>
+                            </div>
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-green">
+                                <div class="flex justify-between items-center">
+                                    <h5 class="font-semibold text-gray-800">Muskmelon</h5>
+                                    <span class="text-campus-green font-bold">₹40</span>
+                                </div>
+                            </div>
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-green">
+                                <div class="flex justify-between items-center">
+                                    <h5 class="font-semibold text-gray-800">Carrot</h5>
+                                    <span class="text-campus-green font-bold">₹40</span>
+                                </div>
+                            </div>
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-green">
+                                <div class="flex justify-between items-center">
+                                    <h5 class="font-semibold text-gray-800">Apple</h5>
+                                    <span class="text-campus-green font-bold">₹50</span>
+                                </div>
+                            </div>
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-green">
+                                <div class="flex justify-between items-center">
+                                    <h5 class="font-semibold text-gray-800">Lemon Mint</h5>
+                                    <span class="text-campus-green font-bold">₹30</span>
+                                </div>
+                            </div>
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-green">
+                                <div class="flex justify-between items-center">
+                                    <h5 class="font-semibold text-gray-800">Orange</h5>
+                                    <span class="text-campus-green font-bold">₹40</span>
+                                </div>
+                            </div>
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-green">
+                                <div class="flex justify-between items-center">
+                                    <h5 class="font-semibold text-gray-800">Mosambi</h5>
+                                    <span class="text-campus-green font-bold">₹40</span>
+                                </div>
+                            </div>
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-green">
+                                <div class="flex justify-between items-center">
+                                    <h5 class="font-semibold text-gray-800">Pomegranate</h5>
+                                    <span class="text-campus-green font-bold">₹70</span>
+                                </div>
+                            </div>
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-green">
+                                <div class="flex justify-between items-center">
+                                    <h5 class="font-semibold text-gray-800">Avocado</h5>
+                                    <span class="text-campus-green font-bold">₹70</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- SUNDAE (ICE CREAM) Section -->
+                    <div class="mb-8">
+                        <h4 class="text-xl font-bold text-campus-green mb-4 border-b-2 border-campus-green pb-2">🍨 SUNDAE (ICE CREAM)</h4>
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-green">
+                                <div class="flex justify-between items-center">
+                                    <h5 class="font-semibold text-gray-800">Topping Icecream</h5>
+                                    <span class="text-campus-green font-bold">₹30</span>
+                                </div>
+                            </div>
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-green">
+                                <div class="flex justify-between items-center">
+                                    <h5 class="font-semibold text-gray-800">Brownie Blast</h5>
+                                    <span class="text-campus-green font-bold">₹60</span>
+                                </div>
+                            </div>
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-green">
+                                <div class="flex justify-between items-center">
+                                    <h5 class="font-semibold text-gray-800">Fruit & Nut</h5>
+                                    <span class="text-campus-green font-bold">₹50</span>
+                                </div>
+                            </div>
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-green">
+                                <div class="flex justify-between items-center">
+                                    <h5 class="font-semibold text-gray-800">Oreo Cream</h5>
+                                    <span class="text-campus-green font-bold">₹50</span>
+                                </div>
+                            </div>
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-green">
+                                <div class="flex justify-between items-center">
+                                    <h5 class="font-semibold text-gray-800">Milk Cake</h5>
+                                    <span class="text-campus-green font-bold">₹50</span>
+                                </div>
+                            </div>
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-green">
+                                <div class="flex justify-between items-center">
+                                    <h5 class="font-semibold text-gray-800">Black Forest Pudding</h5>
+                                    <span class="text-campus-green font-bold">₹60</span>
+                                </div>
+                            </div>
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-green">
+                                <div class="flex justify-between items-center">
+                                    <h5 class="font-semibold text-gray-800">Hot Butter Scotch Banana</h5>
+                                    <span class="text-campus-green font-bold">₹60</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- MILKSHAKES Section -->
+                    <div class="mb-8">
+                        <h4 class="text-xl font-bold text-campus-green mb-4 border-b-2 border-campus-green pb-2">🥤 MILKSHAKES</h4>
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-green">
+                                <div class="flex justify-between items-center">
+                                    <h5 class="font-semibold text-gray-800">Candy Lush</h5>
+                                    <span class="text-campus-green font-bold">₹60</span>
+                                </div>
+                            </div>
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-green">
+                                <div class="flex justify-between items-center">
+                                    <h5 class="font-semibold text-gray-800">Kit Kat</h5>
+                                    <span class="text-campus-green font-bold">₹70</span>
+                                </div>
+                            </div>
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-green">
+                                <div class="flex justify-between items-center">
+                                    <h5 class="font-semibold text-gray-800">Tender Lush</h5>
+                                    <span class="text-campus-green font-bold">₹60</span>
+                                </div>
+                            </div>
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-green">
+                                <div class="flex justify-between items-center">
+                                    <h5 class="font-semibold text-gray-800">Banana Lush</h5>
+                                    <span class="text-campus-green font-bold">₹60</span>
+                                </div>
+                            </div>
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-green">
+                                <div class="flex justify-between items-center">
+                                    <h5 class="font-semibold text-gray-800">Mango Magic</h5>
+                                    <span class="text-campus-green font-bold">₹60</span>
+                                </div>
+                            </div>
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-green">
+                                <div class="flex justify-between items-center">
+                                    <h5 class="font-semibold text-gray-800">Kiwi Delight</h5>
+                                    <span class="text-campus-green font-bold">₹60</span>
+                                </div>
+                            </div>
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-green">
+                                <div class="flex justify-between items-center">
+                                    <h5 class="font-semibold text-gray-800">Litchi Cream</h5>
+                                    <span class="text-campus-green font-bold">₹60</span>
+                                </div>
+                            </div>
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-green">
+                                <div class="flex justify-between items-center">
+                                    <h5 class="font-semibold text-gray-800">Cold Coffee</h5>
+                                    <span class="text-campus-green font-bold">₹60</span>
+                                </div>
+                            </div>
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-green">
+                                <div class="flex justify-between items-center">
+                                    <h5 class="font-semibold text-gray-800">Oreo Shot</h5>
+                                    <span class="text-campus-green font-bold">₹70</span>
+                                </div>
+                            </div>
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-green">
+                                <div class="flex justify-between items-center">
+                                    <h5 class="font-semibold text-gray-800">Double Chocolate</h5>
+                                    <span class="text-campus-green font-bold">₹60</span>
+                                </div>
+                            </div>
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-green">
+                                <div class="flex justify-between items-center">
+                                    <h5 class="font-semibold text-gray-800">Caramel Coco</h5>
+                                    <span class="text-campus-green font-bold">₹60</span>
+                                </div>
+                            </div>
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-green">
+                                <div class="flex justify-between items-center">
+                                    <h5 class="font-semibold text-gray-800">Berry Blast</h5>
+                                    <span class="text-campus-green font-bold">₹60</span>
+                                </div>
+                            </div>
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-green">
+                                <div class="flex justify-between items-center">
+                                    <h5 class="font-semibold text-gray-800">Black Mist</h5>
+                                    <span class="text-campus-green font-bold">₹60</span>
+                                </div>
+                            </div>
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-green">
+                                <div class="flex justify-between items-center">
+                                    <h5 class="font-semibold text-gray-800">Butter Scotch</h5>
+                                    <span class="text-campus-green font-bold">₹60</span>
+                                </div>
+                            </div>
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-green">
+                                <div class="flex justify-between items-center">
+                                    <h5 class="font-semibold text-gray-800">Rose Milk Shake</h5>
+                                    <span class="text-campus-green font-bold">₹60</span>
+                                </div>
+                            </div>
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-green">
+                                <div class="flex justify-between items-center">
+                                    <h5 class="font-semibold text-gray-800">Badam Milk Shake</h5>
+                                    <span class="text-campus-green font-bold">₹60</span>
+                                </div>
+                            </div>
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-green">
+                                <div class="flex justify-between items-center">
+                                    <h5 class="font-semibold text-gray-800">Gonemade</h5>
+                                    <span class="text-campus-green font-bold">₹70</span>
+                                </div>
+                            </div>
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-green">
+                                <div class="flex justify-between items-center">
+                                    <h5 class="font-semibold text-gray-800">Brownie Shake</h5>
+                                    <span class="text-campus-green font-bold">₹85</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Food Jack -->
+        <div id="foodjack" class="shop-page hidden">
+            <div class="container mx-auto px-4 py-8">
+                <div class="text-center mb-8">
+                    <div class="text-6xl mb-4">🍔</div>
+                    <h2 class="text-4xl font-bold text-campus-red mb-2">Food Jack</h2>
+                    <p class="text-gray-600 text-lg">A Tasty Food Shop</p>
+                    <div class="flex justify-center items-center mt-4 space-x-4">
+                        <span class="bg-campus-red text-white px-3 py-1 rounded-full text-sm">⭐ 4.3/5</span>
+                        <span class="text-gray-600">📍 Food Court near J-Block & small shop in J-Block</span>
+                        <span class="text-gray-600">🕒 11:00 AM - 9:00 PM</span>
+                    </div>
+                </div>
+
+                <div class="max-w-6xl mx-auto">
+                    <h3 class="text-2xl font-bold text-gray-800 mb-6">Menu</h3>
+                    
+                    <!-- FRESH JUICE Section -->
+                    <div class="mb-8">
+                        <h4 class="text-xl font-bold text-campus-red mb-4 border-b-2 border-campus-red pb-2">🧃 FRESH JUICE</h4>
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-red">
+                                <div class="flex justify-between items-center">
+                                    <h5 class="font-semibold text-gray-800">Watermelon</h5>
+                                    <span class="text-campus-red font-bold">₹40</span>
+                                </div>
+                            </div>
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-red">
+                                <div class="flex justify-between items-center">
+                                    <h5 class="font-semibold text-gray-800">Muskmelon</h5>
+                                    <span class="text-campus-red font-bold">₹40</span>
+                                </div>
+                            </div>
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-red">
+                                <div class="flex justify-between items-center">
+                                    <h5 class="font-semibold text-gray-800">Pineapple</h5>
+                                    <span class="text-campus-red font-bold">₹45</span>
+                                </div>
+                            </div>
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-red">
+                                <div class="flex justify-between items-center">
+                                    <h5 class="font-semibold text-gray-800">Musambi</h5>
+                                    <span class="text-campus-red font-bold">₹45</span>
+                                </div>
+                            </div>
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-red">
+                                <div class="flex justify-between items-center">
+                                    <h5 class="font-semibold text-gray-800">ABC (Apple, Beetroot, Carrot)</h5>
+                                    <span class="text-campus-red font-bold">₹50</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- NATIVE DRINKS Section -->
+                    <div class="mb-8">
+                        <h4 class="text-xl font-bold text-campus-red mb-4 border-b-2 border-campus-red pb-2">🥛 NATIVE DRINKS</h4>
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-red">
+                                <div class="flex justify-between items-center">
+                                    <h5 class="font-semibold text-gray-800">Lemon Juice</h5>
+                                    <span class="text-campus-red font-bold">₹20</span>
+                                </div>
+                            </div>
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-red">
+                                <div class="flex justify-between items-center">
+                                    <h5 class="font-semibold text-gray-800">Nannari Sarbath</h5>
+                                    <span class="text-campus-red font-bold">₹25</span>
+                                </div>
+                            </div>
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-red">
+                                <div class="flex justify-between items-center">
+                                    <h5 class="font-semibold text-gray-800">Butter Milk</h5>
+                                    <span class="text-campus-red font-bold">₹20</span>
+                                </div>
+                            </div>
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-red">
+                                <div class="flex justify-between items-center">
+                                    <h5 class="font-semibold text-gray-800">Rose Milk</h5>
+                                    <span class="text-campus-red font-bold">₹30</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- SHAKES Section -->
+                    <div class="mb-8">
+                        <h4 class="text-xl font-bold text-campus-red mb-4 border-b-2 border-campus-red pb-2">🍨 SHAKES</h4>
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-red">
+                                <div class="flex justify-between items-center">
+                                    <h5 class="font-semibold text-gray-800">Brownie</h5>
+                                    <span class="text-campus-red font-bold">₹80</span>
+                                </div>
+                            </div>
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-red">
+                                <div class="flex justify-between items-center">
+                                    <h5 class="font-semibold text-gray-800">Kit Kat</h5>
+                                    <span class="text-campus-red font-bold">₹80</span>
+                                </div>
+                            </div>
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-red">
+                                <div class="flex justify-between items-center">
+                                    <h5 class="font-semibold text-gray-800">Chocolate</h5>
+                                    <span class="text-campus-red font-bold">₹70</span>
+                                </div>
+                            </div>
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-red">
+                                <div class="flex justify-between items-center">
+                                    <h5 class="font-semibold text-gray-800">Strawberry</h5>
+                                    <span class="text-campus-red font-bold">₹70</span>
+                                </div>
+                            </div>
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-red">
+                                <div class="flex justify-between items-center">
+                                    <h5 class="font-semibold text-gray-800">Butterscotch</h5>
+                                    <span class="text-campus-red font-bold">₹70</span>
+                                </div>
+                            </div>
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-red">
+                                <div class="flex justify-between items-center">
+                                    <h5 class="font-semibold text-gray-800">Black Currant</h5>
+                                    <span class="text-campus-red font-bold">₹80</span>
+                                </div>
+                            </div>
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-red">
+                                <div class="flex justify-between items-center">
+                                    <h5 class="font-semibold text-gray-800">Mango</h5>
+                                    <span class="text-campus-red font-bold">₹70</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- NATIVE SPECIALS Section -->
+                    <div class="mb-8">
+                        <h4 class="text-xl font-bold text-campus-red mb-4 border-b-2 border-campus-red pb-2">🍲 NATIVE SPECIALS</h4>
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-red">
+                                <div class="flex justify-between items-center">
+                                    <h5 class="font-semibold text-gray-800">Thattu Vada Set</h5>
+                                    <span class="text-campus-red font-bold">₹30</span>
+                                </div>
+                            </div>
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-red">
+                                <div class="flex justify-between items-center">
+                                    <h5 class="font-semibold text-gray-800">Norukkal</h5>
+                                    <span class="text-campus-red font-bold">₹20</span>
+                                </div>
+                            </div>
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-red">
+                                <div class="flex justify-between items-center">
+                                    <h5 class="font-semibold text-gray-800">Pani Puri / Bhel Puri</h5>
+                                    <span class="text-campus-red font-bold">₹40</span>
+                                </div>
+                            </div>
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-red">
+                                <div class="flex justify-between items-center">
+                                    <h5 class="font-semibold text-gray-800">Sweet Corn (Masala / Veggies)</h5>
+                                    <span class="text-campus-red font-bold">₹40</span>
+                                </div>
+                            </div>
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-red">
+                                <div class="flex justify-between items-center">
+                                    <h5 class="font-semibold text-gray-800">Paniyaram / Kolukattai</h5>
+                                    <span class="text-campus-red font-bold">₹30</span>
+                                </div>
+                            </div>
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-red">
+                                <div class="flex justify-between items-center">
+                                    <h5 class="font-semibold text-gray-800">Samosa Cheese / Chicken</h5>
+                                    <span class="text-campus-red font-bold">₹30 / ₹40</span>
+                                </div>
+                            </div>
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-red">
+                                <div class="flex justify-between items-center">
+                                    <h5 class="font-semibold text-gray-800">Samosa Chaat</h5>
+                                    <span class="text-campus-red font-bold">₹50</span>
+                                </div>
+                            </div>
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-red">
+                                <div class="flex justify-between items-center">
+                                    <h5 class="font-semibold text-gray-800">Madurai Butter Bun</h5>
+                                    <span class="text-campus-red font-bold">₹35</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- SOUTH INDIAN SNACK Section -->
+                    <div class="mb-8">
+                        <h4 class="text-xl font-bold text-campus-red mb-4 border-b-2 border-campus-red pb-2">🍴 SOUTH INDIAN SNACK</h4>
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-red">
+                                <div class="flex justify-between items-center">
+                                    <h5 class="font-semibold text-gray-800">Chicken Kari Vada</h5>
+                                    <span class="text-campus-red font-bold">₹40</span>
+                                </div>
+                            </div>
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-red">
+                                <div class="flex justify-between items-center">
+                                    <h5 class="font-semibold text-gray-800">Paruppu Vada</h5>
+                                    <span class="text-campus-red font-bold">₹20</span>
+                                </div>
+                            </div>
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-red">
+                                <div class="flex justify-between items-center">
+                                    <h5 class="font-semibold text-gray-800">Egg Bonda</h5>
+                                    <span class="text-campus-red font-bold">₹25</span>
+                                </div>
+                            </div>
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-red">
+                                <div class="flex justify-between items-center">
+                                    <h5 class="font-semibold text-gray-800">Vada / Sambar Vada</h5>
+                                    <span class="text-campus-red font-bold">₹20 / ₹30</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- BAJJI VARIETIES Section -->
+                    <div class="mb-8">
+                        <h4 class="text-xl font-bold text-campus-red mb-4 border-b-2 border-campus-red pb-2">🫓 BAJJI VARIETIES</h4>
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-red">
+                                <div class="flex justify-between items-center">
+                                    <h5 class="font-semibold text-gray-800">Vazhakkai</h5>
+                                    <span class="text-campus-red font-bold">₹25</span>
+                                </div>
+                            </div>
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-red">
+                                <div class="flex justify-between items-center">
+                                    <h5 class="font-semibold text-gray-800">Bread Bajji</h5>
+                                    <span class="text-campus-red font-bold">₹25</span>
+                                </div>
+                            </div>
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-red">
+                                <div class="flex justify-between items-center">
+                                    <h5 class="font-semibold text-gray-800">Milagai</h5>
+                                    <span class="text-campus-red font-bold">₹20</span>
+                                </div>
+                            </div>
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-red">
+                                <div class="flex justify-between items-center">
+                                    <h5 class="font-semibold text-gray-800">Masala Milagai Bajji</h5>
+                                    <span class="text-campus-red font-bold">₹30</span>
+                                </div>
+                            </div>
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-red">
+                                <div class="flex justify-between items-center">
+                                    <h5 class="font-semibold text-gray-800">Onion Bajji</h5>
+                                    <span class="text-campus-red font-bold">₹20</span>
+                                </div>
+                            </div>
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-red">
+                                <div class="flex justify-between items-center">
+                                    <h5 class="font-semibold text-gray-800">Potato Bajji</h5>
+                                    <span class="text-campus-red font-bold">₹25</span>
+                                </div>
+                            </div>
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-red">
+                                <div class="flex justify-between items-center">
+                                    <h5 class="font-semibold text-gray-800">Ragi Pakoda</h5>
+                                    <span class="text-campus-red font-bold">₹30</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- EGG VARIETIES Section -->
+                    <div class="mb-8">
+                        <h4 class="text-xl font-bold text-campus-red mb-4 border-b-2 border-campus-red pb-2">🥚 EGG VARIETIES</h4>
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-red">
+                                <div class="flex justify-between items-center">
+                                    <h5 class="font-semibold text-gray-800">Single/Double Omelette</h5>
+                                    <span class="text-campus-red font-bold">₹20 / ₹30</span>
+                                </div>
+                            </div>
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-red">
+                                <div class="flex justify-between items-center">
+                                    <h5 class="font-semibold text-gray-800">Two Omelette</h5>
+                                    <span class="text-campus-red font-bold">₹35</span>
+                                </div>
+                            </div>
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-red">
+                                <div class="flex justify-between items-center">
+                                    <h5 class="font-semibold text-gray-800">Cheese Pepper Omelette</h5>
+                                    <span class="text-campus-red font-bold">₹50</span>
+                                </div>
+                            </div>
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-red">
+                                <div class="flex justify-between items-center">
+                                    <h5 class="font-semibold text-gray-800">Paneer Tikka Omelette</h5>
+                                    <span class="text-campus-red font-bold">₹60</span>
+                                </div>
+                            </div>
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-red">
+                                <div class="flex justify-between items-center">
+                                    <h5 class="font-semibold text-gray-800">Butter Omelette</h5>
+                                    <span class="text-campus-red font-bold">₹40</span>
+                                </div>
+                            </div>
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-red">
+                                <div class="flex justify-between items-center">
+                                    <h5 class="font-semibold text-gray-800">Kalakki / Kolambu Kalakki</h5>
+                                    <span class="text-campus-red font-bold">₹25 / ₹35</span>
+                                </div>
+                            </div>
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-red">
+                                <div class="flex justify-between items-center">
+                                    <h5 class="font-semibold text-gray-800">Chicken Kolambu Kalakki</h5>
+                                    <span class="text-campus-red font-bold">₹45</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- STARTERS Section -->
+                    <div class="mb-8">
+                        <h4 class="text-xl font-bold text-campus-red mb-4 border-b-2 border-campus-red pb-2">🍗 STARTERS</h4>
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-red">
+                                <div class="flex justify-between items-center">
+                                    <h5 class="font-semibold text-gray-800">Chilli Gobi</h5>
+                                    <span class="text-campus-red font-bold">₹70</span>
+                                </div>
+                            </div>
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-red">
+                                <div class="flex justify-between items-center">
+                                    <h5 class="font-semibold text-gray-800">Chilli Chicken</h5>
+                                    <span class="text-campus-red font-bold">₹100</span>
+                                </div>
+                            </div>
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-red">
+                                <div class="flex justify-between items-center">
+                                    <h5 class="font-semibold text-gray-800">Pepper Chicken</h5>
+                                    <span class="text-campus-red font-bold">₹110</span>
+                                </div>
+                            </div>
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-red">
+                                <div class="flex justify-between items-center">
+                                    <h5 class="font-semibold text-gray-800">Pichupotta Chicken</h5>
+                                    <span class="text-campus-red font-bold">₹120</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- GRAVY Section -->
+                    <div class="mb-8">
+                        <h4 class="text-xl font-bold text-campus-red mb-4 border-b-2 border-campus-red pb-2">🍛 GRAVY</h4>
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-red">
+                                <div class="flex justify-between items-center">
+                                    <h5 class="font-semibold text-gray-800">Pepper Chicken</h5>
+                                    <span class="text-campus-red font-bold">₹100</span>
+                                </div>
+                            </div>
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-red">
+                                <div class="flex justify-between items-center">
+                                    <h5 class="font-semibold text-gray-800">Tomato Chicken</h5>
+                                    <span class="text-campus-red font-bold">₹90</span>
+                                </div>
+                            </div>
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-red">
+                                <div class="flex justify-between items-center">
+                                    <h5 class="font-semibold text-gray-800">Lemon Chicken</h5>
+                                    <span class="text-campus-red font-bold">₹100</span>
+                                </div>
+                            </div>
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-red">
+                                <div class="flex justify-between items-center">
+                                    <h5 class="font-semibold text-gray-800">Szechuan Egg Burji</h5>
+                                    <span class="text-campus-red font-bold">₹80</span>
+                                </div>
+                            </div>
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-red">
+                                <div class="flex justify-between items-center">
+                                    <h5 class="font-semibold text-gray-800">Egg Gravy</h5>
+                                    <span class="text-campus-red font-bold">₹70</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- MAIN COURSE Section -->
+                    <div class="mb-8">
+                        <h4 class="text-xl font-bold text-campus-red mb-4 border-b-2 border-campus-red pb-2">🍽️ MAIN COURSE (LUNCH / DINNER)</h4>
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-red">
+                                <div class="flex justify-between items-center">
+                                    <h5 class="font-semibold text-gray-800">Biryani (Plain)</h5>
+                                    <span class="text-campus-red font-bold">₹70</span>
+                                </div>
+                            </div>
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-red">
+                                <div class="flex justify-between items-center">
+                                    <h5 class="font-semibold text-gray-800">Chicken Biryani</h5>
+                                    <span class="text-campus-red font-bold">₹110</span>
+                                </div>
+                            </div>
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-red">
+                                <div class="flex justify-between items-center">
+                                    <h5 class="font-semibold text-gray-800">Kothu Biryani</h5>
+                                    <span class="text-campus-red font-bold">₹120</span>
+                                </div>
+                            </div>
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-red">
+                                <div class="flex justify-between items-center">
+                                    <h5 class="font-semibold text-gray-800">Parota / Chapatti</h5>
+                                    <span class="text-campus-red font-bold">₹15 each</span>
+                                </div>
+                            </div>
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-red">
+                                <div class="flex justify-between items-center">
+                                    <h5 class="font-semibold text-gray-800">Fried Rice (Veg / Egg / Chicken)</h5>
+                                    <span class="text-campus-red font-bold">₹70 / ₹80 / ₹90</span>
+                                </div>
+                            </div>
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-red">
+                                <div class="flex justify-between items-center">
+                                    <h5 class="font-semibold text-gray-800">Noodles (Veg / Egg / Chicken)</h5>
+                                    <span class="text-campus-red font-bold">₹70 / ₹80 / ₹90</span>
+                                </div>
+                            </div>
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-red">
+                                <div class="flex justify-between items-center">
+                                    <h5 class="font-semibold text-gray-800">Schezwan Combo (Veg / Egg / Chicken)</h5>
+                                    <span class="text-campus-red font-bold">₹80 / ₹90 / ₹100</span>
+                                </div>
+                            </div>
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-red">
+                                <div class="flex justify-between items-center">
+                                    <h5 class="font-semibold text-gray-800">Kothu Parota (Veg / Egg / Chicken)</h5>
+                                    <span class="text-campus-red font-bold">₹70 / ₹80 / ₹90</span>
+                                </div>
+                            </div>
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-red">
+                                <div class="flex justify-between items-center">
+                                    <h5 class="font-semibold text-gray-800">Kothu Chapati (Veg / Egg / Chicken)</h5>
+                                    <span class="text-campus-red font-bold">₹70 / ₹80 / ₹90</span>
+                                </div>
+                            </div>
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-red">
+                                <div class="flex justify-between items-center">
+                                    <h5 class="font-semibold text-gray-800">Aloo Parota</h5>
+                                    <span class="text-campus-red font-bold">₹50</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Smiley Cafe -->
+        <div id="smiley" class="shop-page hidden">
+            <div class="container mx-auto px-4 py-8">
+                <div class="text-center mb-8">
+                    <div class="text-6xl mb-4">😊</div>
+                    <h2 class="text-4xl font-bold text-campus-red mb-2">Smiley Cafe</h2>
+                    <p class="text-gray-600 text-lg">Cozy cafe with light bites and desserts</p>
+                    <div class="flex justify-center items-center mt-4 space-x-4">
+                        <span class="bg-campus-red text-white px-3 py-1 rounded-full text-sm">⭐ 4.4/5</span>
+                        <span class="text-gray-600">📍 Food Court, near and opposite to J-Block</span>
+                        <span class="text-gray-600">🕒 7:00 AM - 7:00 PM</span>
+                    </div>
+                </div>
+
+                <div class="max-w-6xl mx-auto">
+                    <h3 class="text-2xl font-bold text-gray-800 mb-6">Menu</h3>
+                    
+                    <!-- BELGIAN WAFFLE Section -->
+                    <div class="mb-8">
+                        <h4 class="text-xl font-bold text-campus-red mb-4 border-b-2 border-campus-red pb-2">🧇 BELGIAN WAFFLE</h4>
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-red">
+                                <div class="flex justify-between items-center">
+                                    <h5 class="font-semibold text-gray-800">Dark Chocolate</h5>
+                                    <span class="text-campus-red font-bold">₹100</span>
+                                </div>
+                            </div>
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-red">
+                                <div class="flex justify-between items-center">
+                                    <h5 class="font-semibold text-gray-800">Milk Chocolate</h5>
+                                    <span class="text-campus-red font-bold">₹100</span>
+                                </div>
+                            </div>
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-red">
+                                <div class="flex justify-between items-center">
+                                    <h5 class="font-semibold text-gray-800">White Chocolate</h5>
+                                    <span class="text-campus-red font-bold">₹100</span>
+                                </div>
+                            </div>
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-red">
+                                <div class="flex justify-between items-center">
+                                    <h5 class="font-semibold text-gray-800">Tripple Chocolate</h5>
+                                    <span class="text-campus-red font-bold">₹120</span>
+                                </div>
+                            </div>
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-red">
+                                <div class="flex justify-between items-center">
+                                    <h5 class="font-semibold text-gray-800">Cookies & Cream</h5>
+                                    <span class="text-campus-red font-bold">₹110</span>
+                                </div>
+                            </div>
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-red">
+                                <div class="flex justify-between items-center">
+                                    <h5 class="font-semibold text-gray-800">Kitkat Krunch</h5>
+                                    <span class="text-campus-red font-bold">₹120</span>
+                                </div>
+                            </div>
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-red">
+                                <div class="flex justify-between items-center">
+                                    <h5 class="font-semibold text-gray-800">Butter Scotch</h5>
+                                    <span class="text-campus-red font-bold">₹110</span>
+                                </div>
+                            </div>
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-red">
+                                <div class="flex justify-between items-center">
+                                    <h5 class="font-semibold text-gray-800">Strawberry</h5>
+                                    <span class="text-campus-red font-bold">₹110</span>
+                                </div>
+                            </div>
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-red">
+                                <div class="flex justify-between items-center">
+                                    <h5 class="font-semibold text-gray-800">Hazelnut</h5>
+                                    <span class="text-campus-red font-bold">₹120</span>
+                                </div>
+                            </div>
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-red">
+                                <div class="flex justify-between items-center">
+                                    <h5 class="font-semibold text-gray-800">Marshmallow</h5>
+                                    <span class="text-campus-red font-bold">₹110</span>
+                                </div>
+                            </div>
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-red">
+                                <div class="flex justify-between items-center">
+                                    <h5 class="font-semibold text-gray-800">Waffle Cake</h5>
+                                    <span class="text-campus-red font-bold">₹130</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- MOMOS Section -->
+                    <div class="mb-8">
+                        <h4 class="text-xl font-bold text-campus-red mb-4 border-b-2 border-campus-red pb-2">🥟 MOMOS</h4>
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-red">
+                                <div class="flex justify-between items-center">
+                                    <h5 class="font-semibold text-gray-800">Chicken Schezwan</h5>
+                                    <span class="text-campus-red font-bold">₹90</span>
+                                </div>
+                            </div>
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-red">
+                                <div class="flex justify-between items-center">
+                                    <h5 class="font-semibold text-gray-800">Peri Chicken</h5>
+                                    <span class="text-campus-red font-bold">₹90</span>
+                                </div>
+                            </div>
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-red">
+                                <div class="flex justify-between items-center">
+                                    <h5 class="font-semibold text-gray-800">Chicken Tikka</h5>
+                                    <span class="text-campus-red font-bold">₹100</span>
+                                </div>
+                            </div>
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-red">
+                                <div class="flex justify-between items-center">
+                                    <h5 class="font-semibold text-gray-800">Veg Schezwan</h5>
+                                    <span class="text-campus-red font-bold">₹70</span>
+                                </div>
+                            </div>
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-red">
+                                <div class="flex justify-between items-center">
+                                    <h5 class="font-semibold text-gray-800">Paneer</h5>
+                                    <span class="text-campus-red font-bold">₹80</span>
+                                </div>
+                            </div>
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-red">
+                                <div class="flex justify-between items-center">
+                                    <h5 class="font-semibold text-gray-800">Cheese Corn</h5>
+                                    <span class="text-campus-red font-bold">₹80</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- FRIED ITEMS Section -->
+                    <div class="mb-8">
+                        <h4 class="text-xl font-bold text-campus-red mb-4 border-b-2 border-campus-red pb-2">🍟 FRIED ITEMS</h4>
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-red">
+                                <div class="flex justify-between items-center">
+                                    <h5 class="font-semibold text-gray-800">Peri Peri French Fries</h5>
+                                    <span class="text-campus-red font-bold">₹70</span>
+                                </div>
+                            </div>
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-red">
+                                <div class="flex justify-between items-center">
+                                    <h5 class="font-semibold text-gray-800">Smiley Nuggets</h5>
+                                    <span class="text-campus-red font-bold">₹60</span>
+                                </div>
+                            </div>
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-red">
+                                <div class="flex justify-between items-center">
+                                    <h5 class="font-semibold text-gray-800">Cheese Corn Nuggets</h5>
+                                    <span class="text-campus-red font-bold">₹80</span>
+                                </div>
+                            </div>
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-red">
+                                <div class="flex justify-between items-center">
+                                    <h5 class="font-semibold text-gray-800">Chicken Nuggets</h5>
+                                    <span class="text-campus-red font-bold">₹90</span>
+                                </div>
+                            </div>
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-red">
+                                <div class="flex justify-between items-center">
+                                    <h5 class="font-semibold text-gray-800">Chicken Bites</h5>
+                                    <span class="text-campus-red font-bold">₹100</span>
+                                </div>
+                            </div>
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-red">
+                                <div class="flex justify-between items-center">
+                                    <h5 class="font-semibold text-gray-800">Chicken Fingers</h5>
+                                    <span class="text-campus-red font-bold">₹100</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- CORN Section -->
+                    <div class="mb-8">
+                        <h4 class="text-xl font-bold text-campus-red mb-4 border-b-2 border-campus-red pb-2">🌽 CORN</h4>
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-red">
+                                <div class="flex justify-between items-center">
+                                    <h5 class="font-semibold text-gray-800">Sweet Corn</h5>
+                                    <span class="text-campus-red font-bold">₹50</span>
+                                </div>
+                            </div>
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-red">
+                                <div class="flex justify-between items-center">
+                                    <h5 class="font-semibold text-gray-800">Peri Peri Corn</h5>
+                                    <span class="text-campus-red font-bold">₹60</span>
+                                </div>
+                            </div>
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-red">
+                                <div class="flex justify-between items-center">
+                                    <h5 class="font-semibold text-gray-800">Cheese Corn</h5>
+                                    <span class="text-campus-red font-bold">₹70</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- BEVERAGES Section -->
+                    <div class="mb-8">
+                        <h4 class="text-xl font-bold text-campus-red mb-4 border-b-2 border-campus-red pb-2">☕ BEVERAGES</h4>
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-red">
+                                <div class="flex justify-between items-center">
+                                    <h5 class="font-semibold text-gray-800">Tea</h5>
+                                    <span class="text-campus-red font-bold">₹15</span>
+                                </div>
+                            </div>
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-red">
+                                <div class="flex justify-between items-center">
+                                    <h5 class="font-semibold text-gray-800">Coffee</h5>
+                                    <span class="text-campus-red font-bold">₹20</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- MOJITO Section -->
+                    <div class="mb-8">
+                        <h4 class="text-xl font-bold text-campus-red mb-4 border-b-2 border-campus-red pb-2">🥤 MOJITO</h4>
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-red">
+                                <div class="flex justify-between items-center">
+                                    <h5 class="font-semibold text-gray-800">Blue</h5>
+                                    <span class="text-campus-red font-bold">₹60</span>
+                                </div>
+                            </div>
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-red">
+                                <div class="flex justify-between items-center">
+                                    <h5 class="font-semibold text-gray-800">Green Apple</h5>
+                                    <span class="text-campus-red font-bold">₹60</span>
+                                </div>
+                            </div>
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-red">
+                                <div class="flex justify-between items-center">
+                                    <h5 class="font-semibold text-gray-800">Black Currant</h5>
+                                    <span class="text-campus-red font-bold">₹70</span>
+                                </div>
+                            </div>
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-red">
+                                <div class="flex justify-between items-center">
+                                    <h5 class="font-semibold text-gray-800">Watermelon</h5>
+                                    <span class="text-campus-red font-bold">₹60</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Coffee Day -->
+        <div id="coffeeday" class="shop-page hidden">
+            <div class="container mx-auto px-4 py-8">
+                <div class="text-center mb-8">
+                    <div class="text-6xl mb-4">☕</div>
+                    <h2 class="text-4xl font-bold text-campus-green mb-2">Coffee Day</h2>
+                    <p class="text-gray-600 text-lg">Premium coffee and refreshing beverages</p>
+                    <div class="flex justify-center items-center mt-4 space-x-4">
+                        <span class="bg-campus-green text-white px-3 py-1 rounded-full text-sm">⭐ 4.6/5</span>
+                        <span class="text-gray-600">📍 C-Block & Food Court near and opposite to J-Block</span>
+                        <span class="text-gray-600">🕒 6:00 AM - 11:00 PM</span>
+                    </div>
+                </div>
+
+                <div class="max-w-6xl mx-auto">
+                    <h3 class="text-2xl font-bold text-gray-800 mb-6">Menu</h3>
+                    
+                    <!-- BEVERAGES Section -->
+                    <div class="mb-8">
+                        <h4 class="text-xl font-bold text-campus-green mb-4 border-b-2 border-campus-green pb-2">☕ BEVERAGES</h4>
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-green">
+                                <div class="flex justify-between items-center">
+                                    <h5 class="font-semibold text-gray-800">Coffee</h5>
+                                    <span class="text-campus-green font-bold">₹15</span>
+                                </div>
+                            </div>
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-green">
+                                <div class="flex justify-between items-center">
+                                    <h5 class="font-semibold text-gray-800">Tea</h5>
+                                    <span class="text-campus-green font-bold">₹15</span>
+                                </div>
+                            </div>
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-green">
+                                <div class="flex justify-between items-center">
+                                    <h5 class="font-semibold text-gray-800">Milk</h5>
+                                    <span class="text-campus-green font-bold">₹15</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- SNACKS Section -->
+                    <div class="mb-8">
+                        <h4 class="text-xl font-bold text-campus-green mb-4 border-b-2 border-campus-green pb-2">🍴 SNACKS</h4>
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-green">
+                                <div class="flex justify-between items-center">
+                                    <h5 class="font-semibold text-gray-800">Vada</h5>
+                                    <span class="text-campus-green font-bold">₹10</span>
+                                </div>
+                            </div>
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-green">
+                                <div class="flex justify-between items-center">
+                                    <h5 class="font-semibold text-gray-800">Veg Puffs</h5>
+                                    <span class="text-campus-green font-bold">₹12</span>
+                                </div>
+                            </div>
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-green">
+                                <div class="flex justify-between items-center">
+                                    <h5 class="font-semibold text-gray-800">Non Veg Puffs</h5>
+                                    <span class="text-campus-green font-bold">₹20</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- CHIPS Section -->
+                    <div class="mb-8">
+                        <h4 class="text-xl font-bold text-campus-green mb-4 border-b-2 border-campus-green pb-2">🥔 CHIPS</h4>
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-green">
+                                <div class="flex justify-between items-center">
+                                    <h5 class="font-semibold text-gray-800">Lays (Small)</h5>
+                                    <span class="text-campus-green font-bold">₹5</span>
+                                </div>
+                            </div>
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-green">
+                                <div class="flex justify-between items-center">
+                                    <h5 class="font-semibold text-gray-800">Lays (Medium)</h5>
+                                    <span class="text-campus-green font-bold">₹10</span>
+                                </div>
+                            </div>
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-green">
+                                <div class="flex justify-between items-center">
+                                    <h5 class="font-semibold text-gray-800">Lays (Large)</h5>
+                                    <span class="text-campus-green font-bold">₹20</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- COOL DRINKS Section -->
+                    <div class="mb-8">
+                        <h4 class="text-xl font-bold text-campus-green mb-4 border-b-2 border-campus-green pb-2">🥤 COOL DRINKS</h4>
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                            <div class="menu-item bg-white p-4 rounded-lg shadow-md border-l-4 border-campus-green">
+                                <div class="flex justify-between items-center">
+                                    <h5 class="font-semibold text-gray-800">Cool Drinks</h5>
+                                    <span class="text-campus-green font-bold">₹10 - ₹100</span>
+                                </div>
+                                <p class="text-xs text-gray-500 mt-1">Various brands and sizes available</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function showHomePage() {
+            document.getElementById('homePage').classList.remove('hidden');
+            document.getElementById('shopPages').classList.add('hidden');
+            
+            // Hide all shop pages
+            const shopPages = document.querySelectorAll('.shop-page');
+            shopPages.forEach(page => page.classList.add('hidden'));
+        }
+
+        function showShopPage(shopId) {
+            document.getElementById('homePage').classList.add('hidden');
+            document.getElementById('shopPages').classList.remove('hidden');
+            
+            // Hide all shop pages first
+            const shopPages = document.querySelectorAll('.shop-page');
+            shopPages.forEach(page => page.classList.add('hidden'));
+            
+            // Show the selected shop page
+            document.getElementById(shopId).classList.remove('hidden');
+        }
+
+        // Search functionality
+        const searchData = [
+            // Renu's Cafeteria items
+            { name: "Idly", shop: "Renu's Cafeteria", shopId: "renu", price: "₹40", category: "Breakfast" },
+            { name: "Vada", shop: "Renu's Cafeteria", shopId: "renu", price: "₹10", category: "Breakfast" },
+            { name: "Masala Dosa", shop: "Renu's Cafeteria", shopId: "renu", price: "₹55", category: "Dosa" },
+            { name: "Chicken Biryani", shop: "Renu's Cafeteria", shopId: "renu", price: "₹110", category: "Rice" },
+            { name: "Parotta Set", shop: "Renu's Cafeteria", shopId: "renu", price: "₹40", category: "Parotta" },
+            { name: "Chilli Chicken", shop: "Renu's Cafeteria", shopId: "renu", price: "₹100", category: "Starters" },
+            { name: "Veg Meals", shop: "Renu's Cafeteria", shopId: "renu", price: "₹95", category: "Meals" },
+            { name: "Tea", shop: "Renu's Cafeteria", shopId: "renu", price: "₹15", category: "Beverages" },
+            { name: "Coffee", shop: "Renu's Cafeteria", shopId: "renu", price: "₹20", category: "Beverages" },
+            
+            // Chewz items
+            { name: "French Fries", shop: "Chewz", shopId: "chewz", price: "₹50", category: "Fries" },
+            { name: "Chicken Nuggets", shop: "Chewz", shopId: "chewz", price: "₹80", category: "Fries" },
+            { name: "Veg Mayo", shop: "Chewz", shopId: "chewz", price: "₹60", category: "Sandwich" },
+            { name: "Chicken Tikka", shop: "Chewz", shopId: "chewz", price: "₹70", category: "Sandwich" },
+            { name: "Chicken Biriyani", shop: "Chewz", shopId: "chewz", price: "₹100", category: "Biriyani" },
+            { name: "Plain Maggi", shop: "Chewz", shopId: "chewz", price: "₹40", category: "Maggi" },
+            { name: "Cheese Maggi", shop: "Chewz", shopId: "chewz", price: "₹50", category: "Maggi" },
+            { name: "Kit Kat Milkshake", shop: "Chewz", shopId: "chewz", price: "₹70", category: "Milkshakes" },
+            
+            // Food Jack items
+            { name: "Watermelon Juice", shop: "Food Jack", shopId: "foodjack", price: "₹40", category: "Fresh Juice" },
+            { name: "Brownie Shake", shop: "Food Jack", shopId: "foodjack", price: "₹80", category: "Shakes" },
+            { name: "Pani Puri", shop: "Food Jack", shopId: "foodjack", price: "₹40", category: "Native Specials" },
+            { name: "Chicken Biryani", shop: "Food Jack", shopId: "foodjack", price: "₹110", category: "Main Course" },
+            { name: "Chilli Chicken", shop: "Food Jack", shopId: "foodjack", price: "₹100", category: "Starters" },
+            { name: "Single Omelette", shop: "Food Jack", shopId: "foodjack", price: "₹20", category: "Egg Varieties" },
+            
+            // Smiley Cafe items
+            { name: "Dark Chocolate Waffle", shop: "Smiley Cafe", shopId: "smiley", price: "₹100", category: "Belgian Waffle" },
+            { name: "Kitkat Krunch Waffle", shop: "Smiley Cafe", shopId: "smiley", price: "₹120", category: "Belgian Waffle" },
+            { name: "Chicken Schezwan Momos", shop: "Smiley Cafe", shopId: "smiley", price: "₹90", category: "Momos" },
+            { name: "Peri Peri French Fries", shop: "Smiley Cafe", shopId: "smiley", price: "₹70", category: "Fried Items" },
+            { name: "Sweet Corn", shop: "Smiley Cafe", shopId: "smiley", price: "₹50", category: "Corn" },
+            { name: "Blue Mojito", shop: "Smiley Cafe", shopId: "smiley", price: "₹60", category: "Mojito" },
+            
+            // Coffee Day items
+            { name: "Coffee", shop: "Coffee Day", shopId: "coffeeday", price: "₹15", category: "Beverages" },
+            { name: "Tea", shop: "Coffee Day", shopId: "coffeeday", price: "₹15", category: "Beverages" },
+            { name: "Milk", shop: "Coffee Day", shopId: "coffeeday", price: "₹15", category: "Beverages" },
+            { name: "Vada", shop: "Coffee Day", shopId: "coffeeday", price: "₹10", category: "Snacks" },
+            { name: "Veg Puffs", shop: "Coffee Day", shopId: "coffeeday", price: "₹12", category: "Snacks" },
+            { name: "Non Veg Puffs", shop: "Coffee Day", shopId: "coffeeday", price: "₹20", category: "Snacks" },
+            { name: "Lays", shop: "Coffee Day", shopId: "coffeeday", price: "₹5-₹20", category: "Chips" },
+            { name: "Cool Drinks", shop: "Coffee Day", shopId: "coffeeday", price: "₹10-₹100", category: "Beverages" },
+            
+            // Shop names
+            { name: "Renu's Cafeteria", shop: "Renu's Cafeteria", shopId: "renu", price: "", category: "Restaurant" },
+            { name: "Chewz", shop: "Chewz", shopId: "chewz", price: "", category: "Restaurant" },
+            { name: "Food Jack", shop: "Food Jack", shopId: "foodjack", price: "", category: "Restaurant" },
+            { name: "Smiley Cafe", shop: "Smiley Cafe", shopId: "smiley", price: "", category: "Restaurant" },
+            { name: "Coffee Day", shop: "Coffee Day", shopId: "coffeeday", price: "", category: "Restaurant" }
+        ];
+
+        function searchItems() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase().trim();
+            const searchResults = document.getElementById('searchResults');
+            
+            if (searchTerm === '') {
+                searchResults.classList.add('hidden');
+                return;
+            }
+            
+            const filteredResults = searchData.filter(item => 
+                item.name.toLowerCase().includes(searchTerm) ||
+                item.shop.toLowerCase().includes(searchTerm) ||
+                item.category.toLowerCase().includes(searchTerm)
+            );
+            
+            if (filteredResults.length === 0) {
+                searchResults.innerHTML = '<div class="p-4 text-gray-500 text-center">No results found 😔</div>';
+                searchResults.classList.remove('hidden');
+                return;
+            }
+            
+            let resultsHTML = '';
+            filteredResults.forEach(item => {
+                resultsHTML += `
+                    <div class="p-4 border-b border-gray-100 hover:bg-gray-50 cursor-pointer transition-colors" onclick="goToShop('${item.shopId}')">
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <h4 class="font-semibold text-gray-800">${item.name}</h4>
+                                <p class="text-sm text-gray-600">${item.shop} ${item.category ? '• ' + item.category : ''}</p>
+                            </div>
+                            ${item.price ? `<span class="text-campus-red font-bold">${item.price}</span>` : ''}
+                        </div>
+                    </div>
+                `;
+            });
+            
+            searchResults.innerHTML = resultsHTML;
+            searchResults.classList.remove('hidden');
+        }
+
+        function goToShop(shopId) {
+            document.getElementById('searchResults').classList.add('hidden');
+            document.getElementById('searchInput').value = '';
+            showShopPage(shopId);
+        }
+
+        // Hide search results when clicking outside
+        document.addEventListener('click', function(event) {
+            const searchContainer = event.target.closest('.max-w-2xl');
+            if (!searchContainer) {
+                document.getElementById('searchResults').classList.add('hidden');
+            }
+        });
+
+        // Initialize the page
+        document.addEventListener('DOMContentLoaded', function() {
+            showHomePage();
+        });
+    </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'97adeee0f4967f2e',t:'MTc1NzE2MTM1OS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
